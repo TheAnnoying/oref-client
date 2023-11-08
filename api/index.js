@@ -9,8 +9,8 @@ const io = new Server(server, {
 	connectionStateRecovery: {}
 });
 
-async function getHistory() {
-	return await fetch("https://www.oref.org.il/WarningMessages/History/AlertsHistory.json").then(e => e.json());
+function getHistory() {
+	return fetch("https://www.oref.org.il/WarningMessages/History/AlertsHistory.json").then(e => e.json());
 }
 
 async function getAlert() {
@@ -19,17 +19,21 @@ async function getAlert() {
 			"x-requested-with": "XMLHttpRequest",
 			Referer: "https://www.oref.org.il/12481-he/Pakar.aspx"
 		},
-	}).then(e => (e.text()))).trim();
+	}).then(e => e.text())).trim();
 }
 
 setInterval(async () => {
 	io.emit("users", io.sockets.sockets.size-1);
 
-	const alert = await getAlert();
+	try {
+		const alert = await getAlert();
 
-	if(alert.length > 0) {
-		io.emit("history", await getHistory());
-		io.emit("alert", JSON.parse(alert));
+		if(alert.length > 0) {
+			io.emit("history", await getHistory());
+			io.emit("alert", JSON.parse(alert));
+		}
+	} catch(error) {
+		io.emit("error", error);
 	}
 }, 5_000);
 
