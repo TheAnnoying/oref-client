@@ -2,27 +2,27 @@
 	import socket from "$lib/index.ts";
 	import { Howl } from "howler";
 
-	import * as Alert from "$lib/components/ui/alert";
 	import * as Table from "$lib/components/ui/table";
 	import * as HoverCard from "$lib/components/ui/hover-card";
+	import * as Dialog from "$lib/components/ui/dialog";
 
-	import { Dot, Settings } from "lucide-svelte";
-	import { fly } from "svelte/transition";
+	import { Skeleton } from "$lib/components/ui/skeleton";
+	import { Dot } from "lucide-svelte";
+	import { fly, fade } from "svelte/transition";
 
 	$: {
 		if(alert) new Howl({ src: "/alarm.mp3" }).play();
 	}
 
-	let history, users, alert, areas, error;
+	let history, alert, error, areas;
 	socket.on("areas", msg => areas = msg);
-	socket.on("users", msg => users = msg);
 	socket.on("alert", msg => { alert = msg; error = false; });
 	socket.on("history", msg => {
 		let temp = [...msg];
 		temp.forEach((element, i) => {
 			if(temp[i+1]?.alertDate === element.alertDate && temp[i+1]?.title === element.title) {
 				element.data += `, ${temp[i+1].data}`;
-				temp.splice(i+1, 1);
+				temp.splice(i + 1, 1);
 			};
 		});
 
@@ -34,18 +34,19 @@
 	socket.io.on("error", () => error = true);
 	socket.io.on("reconnect", () => error = false);
 </script>
+<!-- <Dialog.Root bind:open={error} closeOnEscape="false" closeOnOutsideClick="false">
+	<Dialog.Trigger />
+	<Dialog.Content>
+		<Dialog.Header>
+			<Dialog.Title>שגיאה!</Dialog.Title>
+			<Dialog.Description>
+				החיבור לשרת שלנו לא פועל בעת, נא לא לסמוך על המידע שרשום באתר.
+				השתמשו <a href="https://oref.org.il/" class="underline" target="_blank">באתר של פיקוד העורף</a> לבינתיים.
+			</Dialog.Description>
+		</Dialog.Header>
+	</Dialog.Content>
+</Dialog.Root> -->
 
-<div class="fixed top-5 right-5 drop-shadow-md dark:drop-shadow-none">
-	<Alert.Root><Alert.Title>משתמשים: {error ? "שגיאה" : (users ?? "טוען...")}</Alert.Title></Alert.Root>
-</div>
-{#if error}
-	<div class="fixed top-0 max-w-full" transition:fly={{ y: -5 }}>
-		<Alert.Root variant="destructive" class="rounded-t-none border-t-0 bg-background">
-			<Alert.Title>שגיאה!</Alert.Title>
-			<Alert.Description>החיבור לשרת שלנו לא פועל כעת, נא לא לסמוך על המידע שרשום באתר.<br>השתמשו באתר של <a href="https://oref.org.il/" class="underline" target="_blank">פיקוד העורף</a> לבינתיים.</Alert.Description>
-		</Alert.Root>
-	</div>
-{/if}
 {#if alert && !error}
 	<div class="fixed top-0 border-destructive border border-t-0 rounded-t-none text-destructive rounded-md px-36 p-5 mb-20" transition:fly={{ y: -5 }}>
 		<HoverCard.Root>
@@ -64,8 +65,9 @@
 {/if}
 
 {#if history}
-	<div class="border rounded-lg m-10">
+	<div class="m-10" transition:fade={{ duration: 350 }}>
 		<Table.Root>
+			<Table.Caption>היסטורית ההתרעות</Table.Caption>
 			<Table.Header>
 				<Table.Head class="text-right">סוג מתפקה</Table.Head>
 				<Table.Head class="text-right">מיקום</Table.Head>
@@ -77,6 +79,26 @@
 						<Table.Cell>{data.title}</Table.Cell>
 						<Table.Cell>{data.data}</Table.Cell>
 						<Table.Cell>{data.alertDate.toLocaleString()}</Table.Cell>
+					</Table.Row>
+				{/each}
+			</Table.Body>
+		</Table.Root>
+	</div>
+{:else}
+	<div class="m-10">
+		<Table.Root>
+			<Table.Caption><Skeleton class="w-[451px] h-[20px]" /></Table.Caption>
+			<Table.Header>
+				<Table.Head><Skeleton class="w-full h-[40px]" /></Table.Head>
+				<Table.Head><Skeleton class="w-full h-[40px]" /></Table.Head>
+				<Table.Head><Skeleton class="w-full h-[40px]" /></Table.Head>
+			</Table.Header>
+			<Table.Body>
+				{#each new Array(9).fill("") as element}
+					<Table.Row>
+						<Table.Cell><Skeleton class="w-full h-[20px]" /></Table.Cell>
+						<Table.Cell><Skeleton class="w-full h-[20px]" /></Table.Cell>
+						<Table.Cell><Skeleton class="w-full h-[20px]" /></Table.Cell>
 					</Table.Row>
 				{/each}
 			</Table.Body>
