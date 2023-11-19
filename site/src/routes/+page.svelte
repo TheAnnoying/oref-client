@@ -1,70 +1,49 @@
 <script>
-	import socket from "$lib/index.ts";
+	import { history, alert, error } from "$lib/index.js";
+	import { Skeleton } from "$lib/components/ui/skeleton";
+	import { Dot } from "lucide-svelte";
+	import { fly, fade } from "svelte/transition";
 	import { Howl } from "howler";
 
 	import * as Table from "$lib/components/ui/table";
 	import * as HoverCard from "$lib/components/ui/hover-card";
 	import * as Dialog from "$lib/components/ui/dialog";
 
-	import { Skeleton } from "$lib/components/ui/skeleton";
-	import { Dot } from "lucide-svelte";
-	import { fly, fade } from "svelte/transition";
-
 	$: {
-		if(alert) new Howl({ src: "/alarm.mp3" }).play();
+		if($alert) new Howl({ src: "/alarm.mp3" }).play();
 	}
-
-	let history, alert, error, areas;
-	socket.on("areas", msg => areas = msg);
-	socket.on("alert", msg => { alert = msg; error = false; });
-	socket.on("history", msg => {
-		let temp = [...msg];
-		temp.forEach((element, i) => {
-			if(temp[i+1]?.alertDate === element.alertDate && temp[i+1]?.title === element.title) {
-				element.data += `, ${temp[i+1].data}`;
-				temp.splice(i + 1, 1);
-			};
-		});
-
-		error = false;
-		history = temp;
-	});
-
-	socket.on("error", () => error = true);
-	socket.io.on("error", () => error = true);
-	socket.io.on("reconnect", () => error = false);
 </script>
-<!-- <Dialog.Root bind:open={error} closeOnEscape="false" closeOnOutsideClick="false">
+<Dialog.Root bind:open={$error} closeOnEscape="false" closeOnOutsideClick="false">
 	<Dialog.Trigger />
 	<Dialog.Content>
 		<Dialog.Header>
-			<Dialog.Title>שגיאה!</Dialog.Title>
-			<Dialog.Description>
+			<Dialog.Title class="text-right">שגיאה!</Dialog.Title>
+			<Dialog.Description class="text-right">
 				החיבור לשרת שלנו לא פועל בעת, נא לא לסמוך על המידע שרשום באתר.
 				השתמשו <a href="https://oref.org.il/" class="underline" target="_blank">באתר של פיקוד העורף</a> לבינתיים.
 			</Dialog.Description>
 		</Dialog.Header>
 	</Dialog.Content>
-</Dialog.Root> -->
+</Dialog.Root>
 
-{#if alert && !error}
+{#if $alert}
 	<div class="fixed top-0 border-destructive border border-t-0 rounded-t-none text-destructive rounded-md px-36 p-5 mb-20" transition:fly={{ y: -5 }}>
 		<HoverCard.Root>
 			<HoverCard.Trigger>
 				<div class="flex items-center hover:underline underline-offset-4">
 					<Dot />
-					<p>{alert.data.join(", ")}</p>
+					<p>{$alert.data.join(", ")}</p>
 				</div>
 			</HoverCard.Trigger>
 			<HoverCard.Content>
-				<h4 class="text-sm font-semibold">{alert.title}</h4>
-				<p class="text-sm">{alert.desc}</p>
+				<h4 class="text-sm font-semibold">{$alert.title}</h4>
+				<p class="text-sm">{$alert.desc}</p>
 			</HoverCard.Content>
 		</HoverCard.Root>
 	</div>
 {/if}
 
-{#if history}
+{#if $history}
 	<div class="m-10" transition:fade={{ duration: 350 }}>
 		<Table.Root>
 			<Table.Caption>היסטורית ההתרעות</Table.Caption>
@@ -74,7 +53,7 @@
 				<Table.Head>זמן</Table.Head>
 			</Table.Header>
 			<Table.Body>
-				{#each history as data, i (i)}
+				{#each $history as data, i (i)}
 					<Table.Row>
 						<Table.Cell>{data.title}</Table.Cell>
 						<Table.Cell>{data.data}</Table.Cell>

@@ -11,7 +11,32 @@ body {
 	direction: rtl;
 }
 
+[data-melt-dialog-close] {
+	@apply right-auto;
+	@apply left-4;
+}
+
 @layer base {
+	::-webkit-scrollbar {
+		@apply w-2 h-2;
+	}
+
+	::-webkit-scrollbar-track {
+		@apply !bg-muted;
+	}
+
+	::-webkit-scrollbar-thumb {
+		@apply rounded-sm !bg-muted-foreground/30;
+	}
+
+	html {
+		scrollbar-color: hsl(215.4 16.3% 46.9% / 0.3);
+	}
+
+	html.dark {
+		scrollbar-color: hsl(215.4 16.3% 56.9% / 0.3);
+	}
+
 	:root {
 		--background: 0 0% 100%;
 		--foreground: 240 10% 3.9%;
