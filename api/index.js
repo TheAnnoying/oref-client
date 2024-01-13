@@ -9,45 +9,85 @@ const io = new Server(server, {
 	connectionStateRecovery: {}
 });
 
-function getData(type = "alert") {
-	switch(type.toLowerCase()) {
-		case "history":
-			return fetch("https://www.oref.org.il/WarningMessages/History/AlertsHistory.json").then(e => e.json());
-		case "alert":
-			return fetch("https://www.oref.org.il/WarningMessages/alert/alerts.json", {
-				headers: {
-					"x-requested-with": "XMLHttpRequest",
-					Referer: "https://www.oref.org.il/12481-he/Pakar.aspx"
-				},
-			}).then(e => e.text()).trim();
-		case "areas":
-			return fetch("https://www.oref.org.il/Shared/Ajax/GetDistricts.aspx?lang=he").then(e => e.json());
-		case "instructions":
-			return fetch("https://www.oref.org.il/Shared/Ajax/GetAlarmInstructions.aspx?lang=he").then(e => e.json());
+const fetchURLS = {
+	"history": "https://www.oref.org.il/WarningMessages/History/AlertsHistory.json",
+	"alerts": "https://www.oref.org.il/WarningMessages/alert/alerts.json",
+	"districts": "https://www.oref.org.il/Shared/Ajax/GetDistricts.aspx?lang=he",
+	"instructions": "https://www.oref.org.il/Shared/Ajax/GetAlarmInstructions.aspx?lang=he"
+}
+
+async function fetchData(type = "alert") {
+	if (type.toLowerCase() === "history") {
+		let history = [];
+		const res = await fetch(fetchURLS["history"]).then(e => e.json()).catch(() => { });
+		if(res) {
+			res.forEach((e, i) => {
+				const lastElement = res[i - 1];
+				let location = e.data;
+
+				if (e.alertDate === lastElement?.alertDate && e.title === lastElement?.title) location += `, ${lastElement.data}`;
+				history.push({
+					date: e.alertDate,
+					type: e.title,
+					location
+				});
+			});
+		}
+
+		return history;
+	} else if (type.toLowerCase() === "alert") {
+		let alert = {};
+		const res = await fetch("https://www.oref.org.il/WarningMessages/alert/alerts.json", {
+			headers: {
+				"x-requested-with": "XMLHttpRequest",
+				Referer: "https://www.oref.org.il/12481-he/Pakar.aspx"
+			},
+		}).then(e => e.text()).then(e => e.trim());
+
+		if (res.length > 0) {
+			const raw = JSON.parse(res);
+			alert = {
+				type: raw.title,
+				locations: raw.data,
+				description: raw.desc
+			}
+		}
+
+		return alert;
+	} else {
+		const res = await fetch(fetchURLS[type.toLowerCase()]).then(e => e.json()).catch(() => { });
+		return res;
 	}
 }
 
+let alertRecently;
+
 setInterval(async () => {
-	io.emit("users", io.sockets.sockets.size-1);
-
+	io.emit("usercount", io.sockets.sockets.size - 1);
 	try {
-		const alert = await getData("alert");
+		const alert = await fetchData("alert");
+		const keyAmount = Object.keys(alert).length;
 
-		if(alert.length > 0) {
-			io.emit("alert", JSON.parse(alert));
+		if (keyAmount > 0) {
+			alertRecently = true;
+
+			io.emit("alert", alert);
 			io.emit("history", await getData("history"));
 			io.emit("instructions", await getData("instructions"));
+		} else if (keyAmount === 0 && alertRecently) {
+			alertRecently = false;
+			io.emit("alert", {});
 		}
-	} catch(error) {
+	} catch (error) {
 		io.emit("error", error);
 	}
-}, 5_000);
+}, 2_000);
 
 io.on("connection", async socket => {
 	console.log("a user connected");
 
-	io.emit("history", await getData("history"));
-	io.emit("areas", await getData("areas"));
+	socket.emit("history", await fetchData("history"));
+	socket.emit("districts", await fetchData("districts"));
 
 	socket.on("disconnect", () => console.log("a user disconnected"));
 });
