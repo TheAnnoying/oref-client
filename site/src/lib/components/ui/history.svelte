@@ -1,4 +1,5 @@
 <script>
+	import { relativeDate } from "../util/relativeDate.js";
     import { history } from "$lib/index.js";
 	import { Skeleton } from "$lib/components/ui/skeleton";
     import * as Table from "$lib/components/ui/table";
@@ -18,7 +19,7 @@
 					<Table.Row>
 						<Table.Cell>{data.type}</Table.Cell>
 						<Table.Cell>{data.location}</Table.Cell>
-						<Table.Cell>{data.date}</Table.Cell>
+						<Table.Cell>{relativeDate(data.date)}</Table.Cell>
 					</Table.Row>
 				{/each}
 			</Table.Body>
