@@ -62,21 +62,28 @@ async function fetchData(type = "alert") {
 
 let alertRecently;
 
+function emit(name, value) {
+	return new Promise((fulfil, reject) => {
+		io.emit(name, value, err => err ? reject(err) : fulfil());
+	});
+}
+
 async function sendData() {
-	io.emit("usercount", io.sockets.sockets.size - 1);
 	try {
+		emit("usercount", io.sockets.sockets.size - 1);
+
 		const alert = await fetchData("alert");
 		const keyAmount = Object.keys(alert).length;
 
 		if (keyAmount > 0) {
 			alertRecently = true;
 
-			io.emit("alert", alert);
-			io.emit("history", await getData("history"));
-			io.emit("instructions", await getData("instructions"));
+			emit("alert", alert);
+			emit("history", await getData("history"));
+			emit("instructions", await getData("instructions"));
 		} else if (keyAmount === 0 && alertRecently) {
 			alertRecently = false;
-			io.emit("alert", {});
+			emit("alert", {});
 		}
 	} catch (error) {
 		console.error(error);
