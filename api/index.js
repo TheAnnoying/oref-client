@@ -62,7 +62,7 @@ async function fetchData(type = "alert") {
 
 let alertRecently;
 
-setInterval(async () => {
+async function sendData() {
 	io.emit("usercount", io.sockets.sockets.size - 1);
 	try {
 		const alert = await fetchData("alert");
@@ -79,9 +79,13 @@ setInterval(async () => {
 			io.emit("alert", {});
 		}
 	} catch (error) {
-		io.emit("error", error);
+		console.error(error);
 	}
-}, 2_000);
+
+	setTimeout(sendData, 2_000);
+}
+
+sendData();
 
 io.on("connection", async socket => {
 	console.log("a user connected");
