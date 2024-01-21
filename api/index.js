@@ -63,14 +63,12 @@ async function fetchData(type = "alert") {
 let alertRecently;
 
 function emit(name, value) {
-	return new Promise((fulfil, reject) => {
-		io.emit(name, value, err => err ? reject(err) : fulfil());
-	});
+	return new Promise(fulfil => io.emit(name, value, fulfil));
 }
 
 async function sendData() {
 	try {
-		emit("usercount", io.sockets.sockets.size - 1);
+		await emit("usercount", io.sockets.sockets.size - 1);
 
 		const alert = await fetchData("alert");
 		const keyAmount = Object.keys(alert).length;
@@ -78,12 +76,12 @@ async function sendData() {
 		if (keyAmount > 0) {
 			alertRecently = true;
 
-			emit("alert", alert);
-			emit("history", await getData("history"));
-			emit("instructions", await getData("instructions"));
+			await emit("alert", alert);
+			await emit("history", await getData("history"));
+			await emit("instructions", await getData("instructions"));
 		} else if (keyAmount === 0 && alertRecently) {
 			alertRecently = false;
-			emit("alert", {});
+			await emit("alert", {});
 		}
 	} catch (error) {
 		console.error(error);
