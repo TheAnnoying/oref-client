@@ -1,5 +1,5 @@
 <script>
-	import "../style/app.css";
+	import "../app.css";
 	import { districts, usercount, connected } from "$lib/index.js";
 
 	import { Button } from "$lib/components/ui/button";
@@ -22,7 +22,7 @@
 	<title>קליינט פיקוד העורף</title>
 </svelte:head>
 
-{#if $connected == true}
+{#if $connected === true}
 	<div class="flex items-center backdrop-blur-md p-4 fixed top-0 w-full border-b z-10" transition:fade={{ delay: 300, duration: 200 }}>
 		<div class="flex flex-[1]">
 			<Badge variant="outline">משתמשים: {$usercount ?? "0"}</Badge>
@@ -60,10 +60,9 @@
 			{/if}
 		</Dialog.Content>
 	</Dialog.Root>
-
 	<div transition:fade={{ delay: 300, duration: 200 }}><slot/></div>
 {:else}
-	<div class="fixed bg-white w-screen h-screen flex flex-row gap-5 justify-center items-center z-20" transition:fade={{ duration: 75 }}>
+	<div class="fixed bg-background w-screen h-screen flex flex-row gap-5 justify-center items-center z-20" transition:fade={{ duration: 75 }}>
 		<RefreshCcw class="animate-spin" />
 		<p>מתחבר...</p>
 	</div>
