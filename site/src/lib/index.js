@@ -1,10 +1,12 @@
 import { io } from "socket.io-client";
 import { log } from "./components/util/log.js";
 import { writable } from "svelte/store";
-const socket = io("http://localhost:3000");
+
+const serverURL = "http://localhost:3000";
+const socket = io(serverURL);
 
 export let
-    history = writable([]),
+    history = writable({}),
     alert = writable({}),
     connected = writable(false),
     districts = writable(null),
