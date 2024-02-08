@@ -1,34 +1,52 @@
 import { io } from "socket.io-client";
 import { log } from "./components/util/log.js";
 import { writable } from "svelte/store";
+import { browser } from "$app/environment";
 
 const serverURL = "http://localhost:3000";
-const socket = io(serverURL);
+
+export const localStorage = {
+    get: (name) => {
+        if(browser) return window.localStorage.getItem(name);
+    },
+    set: (name, value) => {
+        if(browser) window.localStorage.setItem(name, value);
+        return value;
+    }
+}
 
 export let
-    history = writable({}),
+    history = writable(),
     alert = writable({}),
     connected = writable(false),
-    districts = writable(null),
-    usercount = writable(0);
+    cities = writable([]),
+    usercount = writable(0),
+    preferredLocations = writable(localStorage.get("preferredLocations")?.length > 0 ? localStorage.get("preferredLocations")?.split(",") : []);
 
-socket.on("connect", () => log("Connected to WS"));
+export function connectWebsocket() {
+    const socket = io(serverURL);
 
-socket.on("usercount", msg => usercount.set(msg));
-socket.on("districts", msg => districts.set(msg));
-socket.on("alert", msg => alert.set(msg));
-socket.on("history", msg => history.set(msg));
+    socket.on("usercount", msg => usercount.set(msg));
+    socket.on("cities", msg => cities.set(msg));
+    socket.on("alert", msg => alert.set(msg));
+    socket.on("history", msg => history.set(msg));
 
-const setConnected = (bool = false) => connected.set(bool);
+    const setConnected = (bool = false) => connected.set(bool);
 
-socket.io.on("reconnect_failed", setConnected);
-socket.io.on("connect_error", setConnected);
-socket.io.on("error", setConnected);
-socket.on("disconnect", setConnected);
-socket.on("connect", () => setConnected(true));
+    socket.on("connect", () => {
+        log("Connected to WS");
+        setConnected(true);
+    });
 
-socket.io.on("reconnect", () => log("Reconnected to WS"));
-socket.io.on("reconnect_attempt", () => {
-    log("Attempting a WS reconnect...", "warn");
-    setConnected();
-});
+    socket.io.on("reconnect_failed", setConnected);
+    socket.io.on("connect_error", setConnected);
+    socket.io.on("error", setConnected);
+    socket.on("disconnect", setConnected);
+    socket.on("connect", () => setConnected(true));
+
+    socket.io.on("reconnect", () => log("Reconnected to WS"));
+    socket.io.on("reconnect_attempt", () => {
+        log("Attempting a WS reconnect...", "warn");
+        setConnected();
+    });
+}
