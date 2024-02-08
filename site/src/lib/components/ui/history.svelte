@@ -1,59 +1,66 @@
 <script>
-	export let type;
     import { history } from "$lib/index.js";
-
-	import * as Table from "$lib/components/ui/table";
-	import * as Tooltip from "$lib/components/ui/tooltip";
-
-	import { Skeleton } from "$lib/components/ui/skeleton";
 	import { relativeDate } from "../util/relativeDate.js";
-    import { fade } from "svelte/transition";
+
+	import * as Tooltip from "$lib/components/ui/tooltip";
+	import * as Card from "$lib/components/ui/card";
+
+	import { Clock, Rocket, PlaneTakeoff, Sword, Home, Radiation, Waves, AlertOctagon, HelpCircle } from "lucide-svelte";
+	import { Skeleton } from "$lib/components/ui/skeleton";
+	import { fade } from "svelte/transition";
+
+	const typeIcons = {
+		"ירי רקטות וטילים": Rocket,
+		"חדירת כלי טיס עוין": PlaneTakeoff,
+		"חדירת מחבלים": Sword,
+		"רעידת אדמה": Home,
+		"אירוע רדיולוגי": Radiation,
+		"צונאמי": Waves,
+		"אירוע חומרים מסוכנים": AlertOctagon,
+	}
 </script>
-{#if $history[type]?.length > 0}
-	<div transition:fade={{ duration: 350 }} class="w-[600px]">
-		<Table.Root>
-			<Table.Caption>היסטורית ההתרעות</Table.Caption>
-			<Table.Header>
-				<Table.Head class="text-right">סוג מתפקה</Table.Head>
-				<Table.Head class="text-right">מיקום</Table.Head>
-				<Table.Head class="text-left">זמן</Table.Head>
-			</Table.Header>
-			<Table.Body>
-				{#each $history[type] as data, i (i)}
-					<Table.Row>
-						<Table.Cell class="text-right">{data.type}</Table.Cell>
-						<Table.Cell class="text-right">{data.location}</Table.Cell>
-						<Table.Cell class="text-left">
-							<Tooltip.Root>
-								<Tooltip.Trigger>{relativeDate(data.date, data.time)}</Tooltip.Trigger>
-								<Tooltip.Content><p>{relativeDate(data.date, data.time, true)}</p></Tooltip.Content>
-							</Tooltip.Root>
-						</Table.Cell>
-					</Table.Row>
-				{/each}
-			</Table.Body>
-		</Table.Root>
+{#if $history?.length > 0}
+	<div class="sm:w-[600px] w-[350px]" transition:fade={{ duration: 350 }}>
+		{#each $history as data, i (i)}
+			<Card.Root class="my-4">
+				<Card.Header>
+					<Card.Title class="flex justify-between">
+						<div class="flex flex-row gap-2">
+							<svelte:component this={typeIcons[data.type] ?? HelpCircle} class="h-5 w-5 text-destructive" />
+							{data.type}
+						</div>
+						<Tooltip.Root>
+							<Tooltip.Trigger class="flex flex-row items-center gap-2 text-sm text-muted-foreground font-normal">
+								{relativeDate(data.date, data.time)}
+								<Clock class="h-4 w-4" />
+							</Tooltip.Trigger>
+							<Tooltip.Content>{relativeDate(data.date, data.time, true)}</Tooltip.Content>
+						</Tooltip.Root>
+					</Card.Title>
+					<Card.Description>{data.location}</Card.Description>
+				</Card.Header>
+			</Card.Root>
+		{/each}
 	</div>
-{:else if $history[type]?.length === 0}
-	<p class="text-2xl font-semibold m-5">אין התרעות.</p>
+{:else if $history?.length === 0}
+	<p class="text-3xl font-semibold">אין התרעות.</p>
 {:else}
-	<div class="pointer-events-none">
-		<Table.Root>
-			<Table.Caption><Skeleton class="w-[600px] h-[20px]" /></Table.Caption>
-			<Table.Header>
-				<Table.Head><Skeleton class="w-full h-[30px]" /></Table.Head>
-				<Table.Head><Skeleton class="w-full h-[30px]" /></Table.Head>
-				<Table.Head><Skeleton class="w-full h-[30px]" /></Table.Head>
-			</Table.Header>
-			<Table.Body>
-				{#each new Array(12).fill("") as element}
-					<Table.Row>
-						<Table.Cell><Skeleton class="w-full h-[20px]" /></Table.Cell>
-						<Table.Cell><Skeleton class="w-full h-[20px]" /></Table.Cell>
-						<Table.Cell><Skeleton class="w-full h-[20px]" /></Table.Cell>
-					</Table.Row>
-				{/each}
-			</Table.Body>
-		</Table.Root>
+	<div class="sm:w-[600px] w-[350px]">
+		{#each new Array(12).fill("") as element}
+			<Card.Root class="my-4">
+				<Card.Header>
+					<Card.Title class="flex justify-between">
+						<div class="flex flex-row gap-2">
+							<Skeleton class="h-5 w-5 rounded-full" />
+							<Skeleton class="w-[200px] h-[20px]" />
+						</div>
+						<Skeleton class="w-[40px] h-[20px]" />
+					</Card.Title>
+					<Card.Description>
+						<Skeleton style="width: {Math.floor(Math.random()*361) + 40}px;" class="h-[20px]" />
+					</Card.Description>
+				</Card.Header>
+			</Card.Root>
+		{/each}
 	</div>
 {/if}
