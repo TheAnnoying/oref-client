@@ -84,11 +84,10 @@ async function sendData() {
 
 			await emit("alert", alert);
 			await emit("instructions", await fetchData("instructions"));
-
-			await emit("history", await fetchData("history"));
 		} else if (keyAmount === 0 && alertRecently) {
 			alertRecently = false;
 			await emit("alert", {});
+			await emit("history", await fetchData("history"));
 		}
 	} catch (error) {
 		console.error(error);
