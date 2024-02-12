@@ -20,7 +20,7 @@
 	}
 </script>
 {#if $history?.length > 0}
-	<div class="sm:w-[600px] w-[350px]" transition:fade={{ duration: 350 }}>
+	<div class="sm:w-[600px] w-[350px]" transition:fade={{ duration: 150 }}>
 		{#each $history as data, i (i)}
 			<Card.Root class="my-4">
 				<Card.Header>
