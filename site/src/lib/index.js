@@ -21,7 +21,8 @@ export let
     connected = writable(false),
     cities = writable([]),
     usercount = writable(0),
-    preferredLocations = writable(JSON?.parse(localStorage.get("preferredLocations") ?? "[]"));
+    preferredLocations = writable(JSON?.parse(localStorage.get("preferredLocations") ?? "[]")),
+    editMode = writable(false);
 
 export function connectWebsocket() {
     const socket = io(serverURL);
