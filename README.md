@@ -1,10 +1,9 @@
 # Oref Client
-> A better client for the oref website
+> An alternative website to view real-time missile alerts from Israel's National Emergency Portal (פיקוד העורף)
 
 ## Improvements
 * No constant requests from the client
-* Updating history table
-* Alerting about connection issues
+* Updating alert history
 * Less alarming sound for alerts
 * Taggable locations
 
