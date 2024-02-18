@@ -74,8 +74,6 @@ function emit(name, value) {
 
 async function sendData() {
 	try {
-		await emit("usercount", io.engine.clientsCount);
-
 		const alert = await fetchData("alert");
 		const keyAmount = Object.keys(alert).length;
 
@@ -101,10 +99,14 @@ sendData();
 io.on("connection", async socket => {
 	console.log("a user connected");
 
+	socket.emit("usercount", io.engine.clientsCount);
 	socket.emit("history", await fetchData("history"));
 
 	socket.emit("cities", await fetchData("cities"));
-	socket.on("disconnect", () => console.log("a user disconnected"));
+	socket.on("disconnect", () => {
+		socket.emit("usercount", io.engine.clientsCount);
+		console.log("a user disconnected");
+	});
 });
 
 server.listen(3000, () => {
