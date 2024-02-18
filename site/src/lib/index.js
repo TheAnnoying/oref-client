@@ -22,7 +22,7 @@ export let
     cities = writable([]),
     usercount = writable(0),
     preferredLocations = writable(JSON?.parse(localStorage.get("preferredLocations") ?? "[]")),
-    editMode = writable(false);
+    editMode = writable(JSON?.parse(localStorage.get("editMode") ?? false));
 
 export function connectWebsocket() {
     const socket = io(serverURL);
