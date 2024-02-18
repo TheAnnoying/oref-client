@@ -39,7 +39,7 @@
 {#if $connected === true}
 	<div class="contents">
 		<Navbar />
-		<a class="md:block hidden fixed bottom-5 right-5" href="https://www.oref.org.il/12761-he/Pakar.aspx" target="_blank"><Info /></a>
+		<a class="md:block hidden fixed bottom-5 right-5" href="https://www.oref.org.il/12761-he/Pakar.aspx" aria-label="קישור למידע באתר פיקוד העורף לגבי התרעות" target="_blank"><Info /></a>
 		<main id="main"><slot /></main>
 	</div>
 {:else}
