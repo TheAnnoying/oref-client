@@ -38,10 +38,10 @@
                                     <Plus class="w-3 h-3" />
                                 </Button>
                             </Popover.Trigger>
-                            <Popover.Content>
+                            <Popover.Content class="transition-all">
                                 <form class="flex flex-row items-center justify-around">
                                     <Input placeholder="הוסף תאג למיקום" class="w-fit" bind:value={taginput} />
-                                    <Button disabled={taginput && !$preferredLocations.flatMap(e => e[1]).includes(taginput) ? "" : "true"} type="submit" size="icon" on:click={() => { $preferredLocations = [...$preferredLocations.map(e => {
+                                    <Button disabled={taginput && !$preferredLocations.flatMap(() => city[1]).includes(taginput) ? "" : "true"} type="submit" size="icon" on:click={() => { $preferredLocations = [...$preferredLocations.map(e => {
                                         if(e[0] === city[0] && !e[1].includes(taginput)) e[1].push(taginput);
                                         return e;
                                     })]; taginput = null }}>
