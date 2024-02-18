@@ -8,7 +8,7 @@
     import PreferredLocationList from "./preferred-location-list.svelte";
     import * as Command from "$lib/components/ui/command";
 </script>
-<div class="flex {input ? "flex-row" : "flex-col"} md:w-[500px] w-[350px] gap-2" transition:fly={{ y: 10, duration: 350 }}>
+<div class="flex {input ? "flex-row" : "flex-col"} md:w-[500px] w-[350px] gap-2" in:fly={{ y: 10, duration: 350 }}>
     <Command.Root class="{input ? "w-1/2" : null} duration-150 rounded-lg border shadow-md" loop>
         <Command.Input placeholder="חפש מיקום" class="mr-1" bind:value={input} />
         {#if input}
@@ -26,7 +26,7 @@
             </Command.List>
         {/if}
     </Command.Root>
-    <div class="{input ? "w-1/2" : null} duration-150 rounded-lg flex flex-col gap-1 mb-2" transition:fly={{ y: 5, duration: 350, opacity: 0.5, delay: 100 }}>
+    <div class="{input ? "w-1/2" : null} duration-150 rounded-lg flex flex-col gap-1 mb-2" in:fly={{ y: 5, duration: 350, opacity: 0.5, delay: 100 }}>
         <PreferredLocationList />
     </div>
 </div>
