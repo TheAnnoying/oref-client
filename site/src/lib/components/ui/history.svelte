@@ -1,21 +1,17 @@
 <script>
     import { history } from "$lib/index.js";
 	import { relativeDate } from "../util/relativeDate.js";
-	import { browser } from "$app/environment";
 
 	import InfiniteScroll from "svelte-infinite-scroll";
 	import * as Tooltip from "$lib/components/ui/tooltip";
 	import * as Card from "$lib/components/ui/card";
-
-	let body;
-	if(browser) body = document.body;
 
 	import { Clock, Rocket, PlaneTakeoff, Sword, Home, Radiation, Waves, AlertOctagon, HelpCircle } from "lucide-svelte";
 	import { Skeleton } from "$lib/components/ui/skeleton";
 	import { fade } from "svelte/transition";
 
 	let page = 0, size = 12, historyCards = [];
-	$: historyCards = [...historyCards, ...($history ?? []).splice(size*page, size*(page+1)-1)];
+	$: historyCards = [...historyCards, ...(($history ?? []).slice(size*page, size*(page+1)-1))];
 
 	const typeIcons = {
 		"ירי רקטות וטילים": Rocket,
@@ -28,8 +24,8 @@
 	}
 </script>
 {#if $history?.length > 0}
-	<div class="max-h-screen sm:w-[600px] w-[350px]" transition:fade={{ duration: 150 }}>
-		{#each historyCards as data, i (i)}
+	<div class="max-h-screen sm:w-[600px] w-[350px]" in:fade={{ duration: 150 }}>
+		{#each historyCards as data}
 			<Card.Root class="my-4">
 				<Card.Header>
 					<Card.Title class="flex justify-between">
@@ -49,7 +45,7 @@
 				</Card.Header>
 			</Card.Root>
 		{/each}
-		<InfiniteScroll window={true} elementScroll={body} threshold={100} on:loadMore={() => page++} />
+		<InfiniteScroll window={true} threshold={100} on:loadMore={() => page++} />
 	</div>
 {:else if $history?.length === 0}
 	<p class="text-3xl font-semibold">אין התרעות.</p>
