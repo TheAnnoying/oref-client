@@ -104,8 +104,8 @@ io.on("connection", async socket => {
 
 	socket.emit("cities", await fetchData("cities"));
 	socket.on("disconnect", () => {
-		socket.emit("usercount", io.engine.clientsCount);
 		console.log("a user disconnected");
+		socket.emit("usercount", io.engine.clientsCount);
 	});
 });
 
