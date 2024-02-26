@@ -15,7 +15,9 @@
 
 	alert.subscribe(() => {
 		const keyAmount = Object.keys($alert).length;
-		if(keyAmount > 0 && !soundPlaying && $alert.locations.includes(localStorage.get("preferredLocations")?.split(","))) {
+		const preferredLocations = JSON?.parse(localStorage.get("preferredLocations") ?? "[]");
+
+		if(keyAmount > 0 && !soundPlaying && preferredLocations.length === 0 ? true : preferredLocations.some(e => $alert?.locations?.includes(item))) {
 			soundPlaying = true;
 			sound.play();
 		} else if(keyAmount === 0 && soundPlaying) {
