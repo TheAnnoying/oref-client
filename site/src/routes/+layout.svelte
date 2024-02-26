@@ -43,7 +43,7 @@
 		<main id="main"><slot /></main>
 	</div>
 {:else}
-	<div class="fixed bg-background w-screen h-screen flex flex-row gap-5 justify-center items-center z-20" transition:fade={{ duration: 75 }}>
+	<div class="fixed w-screen h-screen flex flex-row gap-5 justify-center items-center z-20" transition:fade={{ duration: 75 }}>
 		<Loader2 class="animate-spin h-11 w-11" />
 	</div>
 {/if}
