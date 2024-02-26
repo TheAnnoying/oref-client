@@ -6,7 +6,7 @@ export function relativeDate(date, time, fullDate = false) {
 	
 	let now = new Date();
 	let inputDate = new Date(year, month - 1, day, hours, minutes);
-	let diffInDays = (now - inputDate) / (1000 * 60 * 60 * 24);
+	let diffInDays = Math.round((now - inputDate) / (1000 * 60 * 60 * 24));
 
 	if(diffInDays < 1) return `${hours}:${minutes}`;
 	else if(diffInDays < 2) return `אתמול ב-${hours}:${minutes}`;
