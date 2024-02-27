@@ -3,8 +3,6 @@ import { log } from "./components/util/log.js";
 import { writable } from "svelte/store";
 import { browser } from "$app/environment";
 
-const serverURL = "http://localhost:3000";
-
 export const localStorage = {
     get: (name) => {
         if(browser) return window.localStorage.getItem(name);
@@ -25,7 +23,7 @@ export let
     editMode = writable(JSON?.parse(localStorage.get("editMode") ?? false));
 
 export function connectWebsocket() {
-    const socket = io(serverURL);
+    const socket = io(import.meta.env.VITE_API_URL);
 
     socket.on("usercount", msg => usercount.set(msg));
     socket.on("cities", msg => cities.set(msg));
