@@ -20,8 +20,8 @@ export let
     cities = writable([]),
     usercount = writable(0),
     preferredLocations = writable(JSON?.parse(localStorage.get("preferredLocations") ?? "[]")),
-    editMode = writable(JSON?.parse(localStorage.get("editMode") ?? false));
-
+    alertSound = writable(JSON?.parse(localStorage.get("alertSound") ?? "\"beep\""));
+    
 export function connectWebsocket() {
     const socket = io(import.meta.env.VITE_API_URL);
 
