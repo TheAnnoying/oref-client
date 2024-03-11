@@ -7,6 +7,7 @@
     img {
         @apply fixed w-screen bottom-0 right-0;
         @apply hue-rotate-180 invert dark:hue-rotate-0 dark:invert-0;
+        aspect-ratio: 16 / 9;
         height: calc(100vh - 73px);
     }
 </style>
