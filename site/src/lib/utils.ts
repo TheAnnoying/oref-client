@@ -2,9 +2,32 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { cubicOut } from "svelte/easing";
 import type { TransitionConfig } from "svelte/transition";
+import { Rocket, PlaneTakeoff, Sword, Home, Radiation, Waves, AlertOctagon } from "lucide-svelte";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
+}
+
+export const sounds = [
+	{ id: "beep", name: "ביפ (ברירת מחדל)", path: "alarms/beep.mp3" },
+	{ id: "realistic", name: "מציאותי (מאתר פיקוד העורף)", path: "alarms/realistic.mp4" }
+]
+
+export const routes = {
+	"/": "עמוד בית",
+	"/settings": "הגדרות",
+	"/alert/[id]": "התרעות",
+	"/404": "לא נמצא"
+}
+
+export const alertIcons = {
+	"ירי רקטות וטילים": Rocket,
+	"חדירת כלי טיס עוין": PlaneTakeoff,
+	"חדירת מחבלים": Sword,
+	"רעידת אדמה": Home,
+	"אירוע רדיולוגי": Radiation,
+	"צונאמי": Waves,
+	"אירוע חומרים מסוכנים": AlertOctagon,
 }
 
 type FlyAndScaleParams = {
