@@ -7,6 +7,8 @@
 	import nProgress from "nprogress";
 	import { browser } from "$app/environment";
 	import { navigating } from "$app/stores";
+	import { routes } from "$lib/utils";
+	import { page } from "$app/stores";
 
 	import { connected, connectWebsocket } from "$lib/index.js";
 	import { Loader2, Info, FastForward } from "lucide-svelte";
@@ -22,7 +24,12 @@
 		speed: 300
 	});
 
-	$: if(browser) $navigating ? nProgress.start() : nProgress.done();
+	let title;
+
+	$: {
+		if(browser) $navigating ? nProgress.start() : nProgress.done();
+		title = routes[$page.route.id ?? "/404"];
+	}
 </script>
 
 <svelte:head>
@@ -36,9 +43,9 @@
 	<FastForward class="w-3 h-3" />
 </Button>
 
-{#if $connected === true}
+{#if $connected === true && browser}
 	<div class="contents">
-		<Navbar />
+		<Navbar {title} />
 		<a class="md:block hidden fixed bottom-5 right-5" href="https://www.oref.org.il/12761-he/Pakar.aspx" aria-label="קישור למידע באתר פיקוד העורף לגבי התרעות" target="_blank"><Info /></a>
 		<main id="main"><slot /></main>
 	</div>
