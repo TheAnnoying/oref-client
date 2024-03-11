@@ -5,17 +5,17 @@
 
     let latitude, longitude, accuracy;
 
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-            latitude = position.coords.latitude;
-            longitude = position.coords.longitude;
-            accuracy = position.coords.accuracy;
-        },
-        () => { alert('Please enable your GPS position feature.') },
-        { maximumAge: 10000, timeout: 5000, enableHighAccuracy: true });
-    } else {
-        alert("Geolocation API is not supported in your browser.");
-    }
+    // if (navigator.geolocation) {
+    //     navigator.geolocation.getCurrentPosition(position => {
+    //         latitude = position.coords.latitude;
+    //         longitude = position.coords.longitude;
+    //         accuracy = position.coords.accuracy;
+    //     },
+    //     () => { alert('Please enable your GPS position feature.') },
+    //     { maximumAge: 10000, timeout: 5000, enableHighAccuracy: true });
+    // } else {
+    //     alert("Geolocation API is not supported in your browser.");
+    // }
 </script>
 
 <Dialog.Root>
