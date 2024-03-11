@@ -26,6 +26,7 @@ async function fetchData(type = "alert") {
 				if(existing) return existing.location += `, ${location}`;
 
 				history.push({
+					id: e.rid,
 					date: e.date,
 					time: e.time,
 					type: e["category_desc"],
