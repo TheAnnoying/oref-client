@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { HTMLAttributes } from "svelte/elements";
 	import { cn } from "$lib/utils";
+	import { fly } from "svelte/transition";
 
 	type $$Props = HTMLAttributes<HTMLDivElement>;
 
@@ -11,6 +12,7 @@
 <div
 	class={cn("rounded-lg border bg-card text-card-foreground shadow-sm", className)}
 	{...$$restProps}
+	transition:fly={{ y: -12 }}
 >
 	<slot />
 </div>
