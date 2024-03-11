@@ -7,20 +7,24 @@ body {
 	flex-direction: column;
 	align-items: center;
 	min-height: 100vh;
-	direction: rtl;
 }
 
 #nprogress .bar {
     @apply bg-destructive !important;
 }
 
-[data-melt-dialog-close] {
+[data-dialog-close] {
 	@apply right-auto;
 	@apply left-4;
 }
 
+[data-dialog-title] {
+	@apply text-right;
+}
+
 @layer base {
 	:root {
+		direction: rtl !important;
 		--background: 0 0% 100%;
 		--foreground: 240 10% 3.9%;
 		--card: 0 0% 100%;
@@ -67,7 +71,7 @@ body {
 
 @layer base {
 	* {
-		@apply border-border;
+		@apply border-border dark:!border-t-zinc-700;
 	}
 	body {
 		@apply bg-background text-foreground;
