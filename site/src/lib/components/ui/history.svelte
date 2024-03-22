@@ -20,21 +20,25 @@
 {#if $history?.length > 0}
 	<div class="max-h-screen sm:w-[600px] w-[350px]" in:fade={{ duration: 150 }}>
 		<div class="flex flex-row items-center gap-7">
-			<Select.Root onSelectedChange={value => {
+			<Select.Root typeahead=true selected={{
+				value: localStorage.get("historyFilter") ?? "כל ההתרעות",
+				label: localStorage.get("historyFilter") ?? "כל ההתרעות",
+				disabled: false
+			}} onSelectedChange={value => {
 				localStorage.set("historyFilter", value.value);
 				page = 0, size = 12, historyCards = [];
 			}}>
 				<Select.Trigger>
 					<Select.Value placeholder="כל ההתרעות" />
 				</Select.Trigger>
-				<Select.Content>
+				<Select.Content fitViewport={true}>
 					<Select.Item value="כל ההתרעות" class="flex flex-row gap-2">
 						<Asterisk class="h-5 w-5 text-destructive" />
 						כל ההתרעות
 					</Select.Item>
 					{#each Object.keys(alertIcons) as type}
 						{#if $history.some(e => e.type == type)}
-							<Select.Item value={type} class="flex flex-row gap-2">
+							<Select.Item value={type} label={type} class="flex flex-row gap-2">
 								<svelte:component this={alertIcons[type] ?? HelpCircle} class="h-5 w-5 text-destructive" />
 								{type}
 							</Select.Item>
@@ -67,7 +71,7 @@
 								<Tooltip.Content>{relativeDate(data.date, data.time, true)}</Tooltip.Content>
 							</Tooltip.Root>
 						</Card.Title>
-						<Card.Description>{data.location}</Card.Description>
+						<Card.Description>{data.location.join(", ")}</Card.Description>
 					</Card.Header>
 				</Card.Root>
 			</a>
