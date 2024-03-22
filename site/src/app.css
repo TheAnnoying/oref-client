@@ -18,13 +18,9 @@ body {
 	@apply left-4;
 }
 
-[data-dialog-title] {
-	@apply text-right;
-}
-
 @layer base {
 	:root {
-		direction: rtl !important;
+		direction: rtl;
 		--background: 0 0% 100%;
 		--foreground: 240 10% 3.9%;
 		--card: 0 0% 100%;
