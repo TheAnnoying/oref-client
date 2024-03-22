@@ -20,13 +20,10 @@
     </div>
     <div>
         <a href="/" class="text-xl lowercase select-none" aria-label="עמוד הבית של האתר">Oref Client</a>
-        <Badge class="grid place-items-center">
-            {#key title}
-                <span style="grid-row: 1; grid-column: 1;" in:fly={{ y: -12 }} out:fly={{ y: 12 }}>{title}</span>
-            {/key}
+        <Badge class="grid place-items-center !border-t-transparent">
+            {#key title}<span style="grid-row: 1; grid-column: 1;" in:fly={{ y: -12 }} out:fly={{ y: 12 }}>{title}</span>{/key}
         </Badge>
     </div>
-    <p class="sr-only">עמוד הבית של האתר</p>
     <div class="flex flex-[1] justify-end gap-1">
         <Button variant="outline" size="icon" href="/settings" aria-label="עמוד ההגדרות של האתר"><Settings2 /></Button>
         <Button on:click={toggleMode} variant="outline" size="icon" aria-label="כפתור לשינוי נראות האתר - בהיר או כהה">
