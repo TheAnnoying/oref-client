@@ -1,34 +1,43 @@
 <script>
-    import { localStorage, preferredLocations } from "$lib/index.js";
-    import { Plus } from "lucide-svelte";
+    import { localStorage, preferredLocations, cities } from "$lib/index.js";
+    import { Plus, CheckCheck } from "lucide-svelte";
     import { fly } from "svelte/transition";
-
+    
     preferredLocations.subscribe(value => localStorage.set("preferredLocations", JSON.stringify(value)));
-    let open = false;
+    let open = false, input;
 
-    import { buttonVariants } from "$lib/components/ui/button";
-    import * as Dialog from "$lib/components/ui/dialog";
+    import { Button } from "$lib/components/ui/button";
+    import * as Command from "$lib/components/ui/command";
 
     import PreferredLocationList from "./preferred-location-list.svelte";
-    import FullLocationList from "./full-location-list.svelte";
-    import DynamicGeolocation from "./dynamic-geolocation.svelte";
 </script>
 <div class="flex flex-col items-center w-96">
     <div class="duration-150 grid gap-2 mb-2" in:fly={{ y: 10, duration: 350, opacity: 0, delay: 100 }}>
         <PreferredLocationList />
     </div>
     <div in:fly={{ y: -5, opacity: 0, delay: 200 }}>
-        <Dialog.Root bind:open={open}>
-            <Dialog.Trigger class="{buttonVariants({ variant: "ghost" })} sm:w-96 w-80 h-12 !border-foreground border-2 border-dashed rounded-3xl">
-                <Plus class="w-4 h-4" />
-            </Dialog.Trigger>
-            <Dialog.Content>
-                <Dialog.Header><Dialog.Title>הוסף מיקום</Dialog.Title></Dialog.Header>
-                <div class="flex flex-row gap-2">
-                    <DynamicGeolocation />
-                    <FullLocationList />
-                </div>
-            </Dialog.Content>
-        </Dialog.Root>
+        <Button on:click={() => open = true} variant="ghost" class="sm:w-96 w-80 h-12 !border-foreground border-2 border-dashed rounded-3xl">
+            <Plus class="w-4 h-4" />
+        </Button>
+        <Command.Dialog bind:open>
+            <Command.Input placeholder="חפש מיקום" class="mr-1" bind:value={input} />
+            <Command.List>
+                {#if $cities.length === 0}
+                    <Command.Loading class="text-lg text-center font-semibold p-5">נטען...</Command.Loading>
+                {:else}
+                    <Command.Empty>לא נמצאה תוצאה.</Command.Empty>
+                    <Command.Group heading="אזורים">
+                        {#each $cities.slice(0, 100) as city}
+                            <Command.Item class="flex flex-row justify-between" disabled="{$preferredLocations.some(e => e[0] === city)}" onSelect={value => $preferredLocations.some(e => e[0] === value) ? null : $preferredLocations = [...$preferredLocations, [value, []]]}>
+                                {city}
+                                {#if $preferredLocations.some(e => e[0] === city)}
+                                    <CheckCheck class="!w-4 !h-4" />
+                                {/if}
+                            </Command.Item>
+                        {/each}
+                    </Command.Group>
+                {/if}
+            </Command.List>
+        </Command.Dialog>
     </div>
 </div>
