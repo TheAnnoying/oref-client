@@ -20,10 +20,10 @@ async function fetchData(type = "alert") {
 		const res = await fetch(fetchURLS[type.toLowerCase()]).then(e => e.json()).catch(() => {});
 		if(res) {
 			res.forEach((e, i) => {
-				let location = e.data;
+				let location = e.data.split(", ");
 
 				const existing = history.find(v => v.time.slice(0, 5) === e.time.slice(0, 5) && v.date === e.date && v.type === e["category_desc"]);
-				if(existing) return existing.location += `, ${location}`;
+				if(existing) return existing.location.push(location);
 
 				history.push({
 					id: e.rid,
