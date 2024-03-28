@@ -8,13 +8,8 @@
 
     import { Button } from "$lib/components/ui/button";
     import * as Command from "$lib/components/ui/command";
-
-    import PreferredLocationList from "./preferred-location-list.svelte";
 </script>
 <div class="flex flex-col items-center w-96">
-    <div class="duration-150 grid gap-2 mb-2" in:fly={{ y: 10, duration: 350, opacity: 0, delay: 100 }}>
-        <PreferredLocationList />
-    </div>
     <div in:fly={{ y: -5, opacity: 0, delay: 200 }}>
         <Button on:click={() => open = true} variant="ghost" class="sm:w-96 w-80 h-12 !border-foreground border-2 border-dashed rounded-3xl">
             <Plus class="w-4 h-4" />
