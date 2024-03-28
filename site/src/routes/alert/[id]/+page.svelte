@@ -4,7 +4,7 @@
 	import { history } from "$lib/index.js";
 
 	import { page } from "$app/stores";
-	import { onMount } from "svelte";
+	import { onMount, tick } from "svelte";
 	import { relativeDate } from "$lib/components/util/relativeDate";
 
 	import { Button } from "$lib/components/ui/button";
@@ -13,36 +13,42 @@
 	import { fly, fade } from "svelte/transition";
 	import { Clock, HelpCircle, GripHorizontal } from "lucide-svelte";
 	import { alertIcons } from "$lib/utils";
-	let locationsFound = 0;
+	let locationsFound = [], mapSetup = false;
 
 	onMount(async() => {
 		const L = await import("leaflet");
-		const map = L.map("map", { zoomControl: false }).setView([32, 35], 13);
-		map.setZoom(8);
-
+		
 		history.subscribe(() => {
-			const { location } = $history.find(e => e.id === +$page.params.id);
+			tick().then(() => {
+				const location = $history?.find(e => e.id === +$page.params.id)?.location ?? [];
 
-			location.forEach(location => {
-				if(locationList[location]) {
-					locationsFound += 1;
-					const marker = L.marker([locationList[location].centerY, locationList[location].centerX]);
-					marker.bindPopup(`
-					<div style="text-align: center">
-						<p style="margin: 0;">${location}</p>
-						<p style="margin: 0;">זמן למיגון: ${locationList[location]["shelter_time"].text}</p>
-					</div>
-					`).addTo(map);
+				location.forEach(location => {
+					if(locationList[location]) locationsFound.push(location);
+				});
+
+				if(locationsFound.length !== 0) {
+					const map = L.map("map", { zoomControl: false }).setView([32, 35], 13);
+					map.setZoom(8);
+
+					L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+						maxZoom: 13,
+						minZoom: 6,
+						attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
+					}).addTo(map);
+
+					mapSetup = true;
+
+					locationsFound.forEach(location => {
+						const marker = L.marker([locationList[location].centerY, locationList[location].centerX]).addTo(map);
+						marker.bindPopup(`
+						<div style="text-align: center">
+							<p style="margin: 0;">${location}</p>
+							<p style="margin: 0;">זמן למיגון: ${locationList[location]["shelter_time"].text}</p>
+						</div>
+						`)
+					});
 				}
 			});
-
-			if(locationsFound !== 0) {
-				L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-					maxZoom: 13,
-					minZoom: 6,
-					attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
-				}).addTo(map);
-			}
 		});
 	});
 </script>
@@ -51,7 +57,7 @@
 	{#if $history?.length > 0}
 		{#if $history.some(e => e.id === parseInt($page.params.id))}
 			{@const data = $history.find(e => e.id === +$page.params.id)}
-			<Tooltip.Root side="bottom">
+			<Tooltip.Root>
 				<Tooltip.Trigger class="flex flex-row gap-2 text-muted-foreground">
 					<Clock />
 					{relativeDate(data.date, data.time)}
@@ -66,13 +72,15 @@
 			</div>
 			{data.location.join(", ")}
 			<div id="map" in:fly={{ y: 10, opacity: 0, delay: 100 }} class="m-10 lg:w-[900px] lg:aspect-video lg:h-auto w-[350px] h-96 rounded-2xl bg-muted flex items-center justify-center border-border border-2">
-				{#if locationsFound === 0}
-					<p class="text-xl text-muted-foreground tracking-tight">לא ניתן להציג מפה למיקום המבוקש</p>
-				{:else if locationsFound !== data.location.length}
-					<p class="absolute top-[-30px] hover:top-0 transition-all text-lg text-white bg-destructive py-1 px-5 rounded-b-md tracking-tight z-[400] grid place-items-center">
-						לא היה ניתן להציג על המפה את כל המיקומים
-						<GripHorizontal />
-					</p>
+				{#if mapSetup}
+					{#if locationsFound.length === 0}
+						<p class="text-xl text-muted-foreground tracking-tight">לא ניתן להציג מפה למיקום המבוקש</p>
+					{:else if locationsFound.length < data.location.length}
+						<p class="absolute top-[-60px] lg:top-[-30px] hover:top-0 transition-all text-lg text-white bg-destructive py-1 px-5 rounded-b-md tracking-tight z-[400] grid place-items-center">
+							לא היה ניתן להציג על המפה את כל המיקומים
+							<GripHorizontal />
+						</p>
+					{/if}
 				{/if}
 			</div>
 		{:else}
