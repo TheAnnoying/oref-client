@@ -37,6 +37,7 @@
 					}).addTo(map);
 
 					mapSetup = true;
+					console.log("hello")
 
 					locationsFound.forEach(location => {
 						const marker = L.marker([locationList[location].centerY, locationList[location].centerX]).addTo(map);
@@ -72,15 +73,13 @@
 			</div>
 			{data.location.join(", ")}
 			<div id="map" in:fly={{ y: 10, opacity: 0, delay: 100 }} class="m-10 lg:w-[900px] lg:aspect-video lg:h-auto w-[350px] h-96 rounded-2xl bg-muted flex items-center justify-center border-border border-2">
-				{#if mapSetup}
-					{#if locationsFound.length === 0}
-						<p class="text-xl text-muted-foreground tracking-tight">לא ניתן להציג מפה למיקום המבוקש</p>
-					{:else if locationsFound.length < data.location.length}
-						<p class="absolute top-[-60px] lg:top-[-30px] hover:top-0 transition-all text-lg text-white bg-destructive py-1 px-5 rounded-b-md tracking-tight z-[400] grid place-items-center">
-							לא היה ניתן להציג על המפה את כל המיקומים
-							<GripHorizontal />
-						</p>
-					{/if}
+				{#if !mapSetup && locationsFound.length === 0}
+					<p class="text-xl text-muted-foreground tracking-tight">לא ניתן להציג מפה למיקום המבוקש</p>
+				{:else if mapSetup && locationsFound.length < data.location.length}
+					<p class="absolute top-[-60px] lg:top-[-30px] hover:top-0 transition-all text-lg text-white bg-destructive py-1 px-5 rounded-b-md tracking-tight z-[400] grid place-items-center">
+						לא היה ניתן להציג על המפה את כל המיקומים
+						<GripHorizontal />
+					</p>
 				{/if}
 			</div>
 		{:else}
