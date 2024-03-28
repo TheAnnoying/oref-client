@@ -12,7 +12,7 @@
 {#if $preferredLocations.length > 0}
     {#each $preferredLocations as city}
         <div transition:fly={{ y: 5 }}>
-            <Badge variant="outline" class="sm:w-96 w-80 h-12 flex flex-row justify-between">
+            <Badge variant="outline" class="mb-2 sm:w-96 w-80 h-12 flex flex-row justify-between overflow-auto overflow-y-hidden">
                 <div class="flex flex-row items-center gap-2 mr-2">
                     <p>{city[0]}</p>
                     {#each city[1] as tag}
@@ -36,7 +36,7 @@
                         </Popover.Trigger>
                         <Popover.Content class="transition-all">
                             <form class="flex flex-row items-center justify-between gap-5">
-                                <Input placeholder="הוסף תאג למיקום" class="w-fit" bind:value={taginput} />
+                                <Input placeholder="הוסף תג למיקום" class="w-fit" bind:value={taginput} />
                                 <Button disabled={taginput && !$preferredLocations.flatMap(() => city[1]).includes(taginput) ? "" : "true"} type="submit" size="icon" on:click={() => { $preferredLocations = [...$preferredLocations.map(e => {
                                     if(e[0] === city[0] && !e[1].includes(taginput)) e[1].push(taginput);
                                     return e;
