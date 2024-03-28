@@ -9,6 +9,19 @@ body {
 	min-height: 100vh;
 }
 
+*::-webkit-scrollbar {
+	@apply w-2 h-2;
+}
+
+*::-webkit-scrollbar-track {
+	@apply bg-secondary rounded-full;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #cfc9c5 !important;
+    @apply rounded-full;
+}
+
 #nprogress .bar {
     @apply bg-destructive !important;
 }
