@@ -6,6 +6,7 @@
         "css": "src/app.css",
         "baseColor": "zinc"
     },
+    "typescript": false,
     "aliases": {
         "components": "$lib/components",
         "utils": "$lib/utils"
