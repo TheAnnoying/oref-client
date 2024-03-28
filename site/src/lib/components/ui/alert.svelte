@@ -2,29 +2,31 @@
     import { alert, localStorage } from "$lib/index.js";
 	import { sounds } from "$lib/utils";
     import { Radio } from "lucide-svelte";
-    import { Howl, Howler } from "howler";
 	import { fade } from "svelte/transition";
 	import { onMount } from "svelte";
 
     import * as HoverCard from "$lib/components/ui/hover-card";
 	import * as Card from "$lib/components/ui/card";
 
-	let soundPlaying = false;
-	const sound = new Howl({ src: sounds.find(s => s.id === (localStorage.get("sound") ?? "beep")).path, loop: true });
-
-	onMount(Howler.stop);
-
-	alert.subscribe(() => {
-		const keyAmount = Object.keys($alert).length;
-		const preferredLocations = JSON?.parse(localStorage.get("preferredLocations") ?? "[]");
-
-		if(keyAmount > 0 && !soundPlaying && preferredLocations.length === 0 ? true : preferredLocations.some(e => $alert?.locations?.includes(e))) {
-			soundPlaying = true;
-			sound.play();
-		} else if(keyAmount === 0 && soundPlaying) {
-			soundPlaying = false;
-			sound.stop();
-		}
+	onMount(async() => {
+		const { Howl, Howler } = await import("howler");
+		Howler.stop();
+		
+		let soundPlaying = false;
+		const sound = new Howl({ src: sounds.find(s => s.id === (localStorage.get("sound") ?? "beep")).path, loop: true });
+		
+		alert.subscribe(() => {
+			const keyAmount = Object.keys($alert).length;
+			const preferredLocations = JSON?.parse(localStorage.get("preferredLocations") ?? "[]");
+			
+			if(keyAmount > 0 && !soundPlaying && preferredLocations.length === 0 ? true : preferredLocations.some(e => $alert?.locations?.includes(e))) {
+				soundPlaying = true;
+				sound.play();
+			} else if(keyAmount === 0 && soundPlaying) {
+				soundPlaying = false;
+				sound.stop();
+			}
+		});
 	});
 </script>
 {#if Object.keys($alert).length > 0}
