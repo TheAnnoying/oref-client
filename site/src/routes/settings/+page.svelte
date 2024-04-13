@@ -17,7 +17,7 @@
                     <LocationSettings />
                 </div>
             </div>
-            <div class="max-h-56 overflow-auto mb-2" in:fly={{ y: 10, duration: 350, opacity: 0, delay: 100 }}>
+            <div class="flex flex-col items-center max-h-56 my-2 overflow-auto" in:fly={{ y: 10, duration: 350, opacity: 0, delay: 100 }}>
                 <PreferredLocationList />
             </div>
         </div>
