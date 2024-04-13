@@ -11,7 +11,7 @@
 </script>
 {#if $preferredLocations.length > 0}
     {#each $preferredLocations as city}
-        <div transition:fly={{ y: 5 }}>
+        <div>
             <Badge variant="outline" class="mb-2 sm:w-96 w-80 h-12 flex flex-row justify-between overflow-auto overflow-y-hidden">
                 <div class="flex flex-row items-center gap-2 mr-2">
                     <p>{city[0]}</p>
