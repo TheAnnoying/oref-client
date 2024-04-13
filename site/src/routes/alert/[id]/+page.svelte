@@ -9,6 +9,7 @@
 
 	import { Button } from "$lib/components/ui/button";
 	import * as Tooltip from "$lib/components/ui/tooltip";
+	import AlertTags from "$lib/components/ui/alert-tags.svelte";
 
 	import { fly, fade } from "svelte/transition";
 	import { Clock, HelpCircle, GripHorizontal } from "lucide-svelte";
@@ -18,6 +19,11 @@
 	onMount(async() => {
 		const L = await import("leaflet");
 		
+		const markerIcon = L.icon({
+			iconUrl: "/marker-icon.svg",
+			iconSize: [30, 42]
+		});
+
 		history.subscribe(() => {
 			tick().then(() => {
 				const location = $history?.find(e => e.id === +$page.params.id)?.location ?? [];
@@ -37,10 +43,9 @@
 					}).addTo(map);
 
 					mapSetup = true;
-					console.log("hello")
 
 					locationsFound.forEach(location => {
-						const marker = L.marker([locationList[location].centerY, locationList[location].centerX]).addTo(map);
+						const marker = L.marker([locationList[location].centerY, locationList[location].centerX], { icon: markerIcon }).addTo(map);
 						marker.bindPopup(`
 						<div style="text-align: center">
 							<p style="margin: 0;">${location}</p>
@@ -63,7 +68,7 @@
 					<Clock />
 					{relativeDate(data.date, data.time)}
 				</Tooltip.Trigger>
-				<Tooltip.Content>
+				<Tooltip.Content class="font-mono">
 					{relativeDate(data.date, data.time, true)}
 				</Tooltip.Content>
 			</Tooltip.Root>
@@ -71,12 +76,17 @@
 				<svelte:component this={alertIcons[data.type] ?? HelpCircle} class="h-11 w-11 text-destructive" />
 				{data.type}
 			</div>
-			{data.location.join(", ")}
+			<div class="flex flex-col justify-center items-center">
+				<div class="w-3/4 flex flex-wrap flex-row justify-center gap-1">
+					<AlertTags alertLocations={data.location} />
+				</div>
+				{data.location.join(", ")}
+			</div>
 			<div id="map" in:fly={{ y: 10, opacity: 0, delay: 100 }} class="m-10 lg:w-[900px] lg:aspect-video lg:h-auto w-[350px] h-96 rounded-2xl bg-muted flex items-center justify-center border-border border-2">
 				{#if !mapSetup && locationsFound.length === 0}
 					<p class="text-xl text-muted-foreground tracking-tight">לא ניתן להציג מפה למיקום המבוקש</p>
 				{:else if mapSetup && locationsFound.length < data.location.length}
-					<p class="absolute top-[-60px] lg:top-[-30px] hover:top-0 transition-all text-lg text-white bg-destructive py-1 px-5 rounded-b-md tracking-tight z-[400] grid place-items-center">
+					<p class="absolute top-[-60px] lg:top-[-30px] hover:top-0 transition-all text-lg text-white bg-destructive py-1 px-12 rounded-b-md tracking-tight z-[400] grid place-items-center">
 						לא היה ניתן להציג על המפה את כל המיקומים
 						<GripHorizontal />
 					</p>
