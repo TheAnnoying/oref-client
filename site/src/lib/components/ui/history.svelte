@@ -4,11 +4,12 @@
 
 	import InfiniteScroll from "svelte-infinite-scroll";
 	import Alert from "$lib/components/ui/alert.svelte";
+	import AlertTags from "$lib/components/ui/alert-tags.svelte";
 	import * as Tooltip from "$lib/components/ui/tooltip";
 	import * as Card from "$lib/components/ui/card";
 	import * as Select from "$lib/components/ui/select";
 
-	import { Clock, HelpCircle, Asterisk, Bone } from "lucide-svelte";
+	import { Clock, HelpCircle, Asterisk } from "lucide-svelte";
 	import { Skeleton } from "$lib/components/ui/skeleton";
 	import { Separator } from "$lib/components/ui/separator";
 	import { fade } from "svelte/transition";
@@ -60,18 +61,27 @@
 					<Card.Header>
 						<Card.Title class="flex justify-between">
 							<div class="flex flex-row gap-2">
-								<svelte:component this={alertIcons[data.type] ?? HelpCircle} class="h-5 w-5 text-destructive" />
-								{data.type}
+								<div class="flex flex-row gap-2">
+									<svelte:component this={alertIcons[data.type] ?? HelpCircle} class="h-5 w-5 text-destructive" />
+									{data.type}
+								</div>
+								<div class="flex sm:flex-wrap flex-row gap-1 max-w-12 sm:max-w-64 overflow-auto">
+									<AlertTags alertLocations={data.location} />
+								</div>
 							</div>
 							<Tooltip.Root>
 								<Tooltip.Trigger class="flex flex-row items-center gap-2 text-sm text-muted-foreground font-normal">
 									{relativeDate(data.date, data.time)}
 									<Clock class="h-4 w-4" />
 								</Tooltip.Trigger>
-								<Tooltip.Content>{relativeDate(data.date, data.time, true)}</Tooltip.Content>
+								<Tooltip.Content class="font-mono">
+									{relativeDate(data.date, data.time, true)}
+								</Tooltip.Content>
 							</Tooltip.Root>
 						</Card.Title>
-						<Card.Description>{data.location.join(", ")}</Card.Description>
+						<Card.Description>
+							{data.location.join(", ")}
+						</Card.Description>
 					</Card.Header>
 				</Card.Root>
 			</a>
@@ -101,7 +111,7 @@
 						<Skeleton class="w-[40px] h-[20px]" />
 					</Card.Title>
 					<Card.Description>
-						<Skeleton style="width: {Math.floor(Math.random()*361) + 40}px;" class="h-[20px]" />
+						<Skeleton style="width: {Math.floor(Math.random()*250) + 40}px;" class="h-[20px]" />
 					</Card.Description>
 				</Card.Header>
 			</Card.Root>
