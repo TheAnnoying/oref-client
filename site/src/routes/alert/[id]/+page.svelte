@@ -59,7 +59,7 @@
 	});
 </script>
 <div class="fixed inset-0 -z-10 bg-gradient-to-t dark:from-[#2e1212] from-[#ffe1e1] to-transparent" in:fade={{ duration: 350 }}></div>
-<div class="flex flex-col items-center mt-28 mb-10 gap-3 max-w-7xl text-center" in:fly={{ y: 5, opacity: 0, duration: 350 }}>
+<div class="flex flex-col items-center mt-7 mb-10 gap-3 max-w-7xl text-center" in:fly={{ y: 5, opacity: 0, duration: 350 }}>
 	{#if $history?.length > 0}
 		{#if $history.some(e => e.id === parseInt($page.params.id))}
 			{@const data = $history.find(e => e.id === +$page.params.id)}
@@ -86,7 +86,7 @@
 				{#if !mapSetup && locationsFound.length === 0}
 					<p class="text-xl text-muted-foreground tracking-tight">לא ניתן להציג מפה למיקום המבוקש</p>
 				{:else if mapSetup && locationsFound.length < data.location.length}
-					<p class="absolute top-[-60px] lg:top-[-30px] hover:top-0 transition-all text-lg text-white bg-destructive py-1 px-12 rounded-b-md tracking-tight z-[400] grid place-items-center">
+					<p class="absolute -top-[60px] lg:-top-[30px] hover:top-0 transition-all text-lg text-white bg-destructive py-1 px-12 rounded-b-md tracking-tight z-[400] grid place-items-center">
 						לא היה ניתן להציג על המפה את כל המיקומים
 						<GripHorizontal />
 					</p>
