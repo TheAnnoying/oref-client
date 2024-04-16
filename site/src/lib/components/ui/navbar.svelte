@@ -9,7 +9,7 @@
 
     export let title;
 </script>
-<div class="fixed top-0 flex items-center backdrop-blur-md p-4 w-full border-b z-10">
+<div id="navbar" class="sticky top-0 flex items-center backdrop-blur-md p-4 w-full border-b z-10">
     <div class="flex flex-[1]">
         <Badge variant="outline">
             <BarChart class="h-4 w-4 ml-1" />
