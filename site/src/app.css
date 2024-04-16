@@ -9,6 +9,20 @@ body {
 	min-height: 100vh;
 }
 
+.center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.row {
+	flex-direction: row;
+}
+
+.col {
+	flex-direction: column;
+}
+
 *::-webkit-scrollbar {
 	@apply w-2 h-2;
 }
@@ -23,7 +37,7 @@ body {
 }
 
 #nprogress .bar {
-    @apply bg-destructive !important;
+    @apply !bg-destructive;
 }
 
 [data-dialog-close] {
