@@ -19,6 +19,7 @@ export let
     connected = writable(false),
     cities = writable([]),
     usercount = writable(0),
+    interactionBeforeBrowserAudioDialogOpen = writable(true),
     preferredLocations = writable(JSON?.parse(localStorage.get("preferredLocations") ?? "[]")),
     alertSound = writable(JSON?.parse(localStorage.get("alertSound") ?? "\"beep\""));
     
