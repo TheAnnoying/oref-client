@@ -3,18 +3,17 @@
 	import "nprogress/nprogress.css";
 	import { Button } from "$lib/components/ui/button";
 	import Navbar from "$lib/components/ui/navbar.svelte";
+    import InteractionBeforeAudioDialog from "$lib/components/ui/interaction-before-audio-dialog.svelte";
 
 	import nProgress from "nprogress";
 	import { browser } from "$app/environment";
 	import { navigating } from "$app/stores";
-	import { onMount } from "svelte";
 	import { routes } from "$lib/utils";
 	import { page } from "$app/stores";
 
-	import { connected, connectWebsocket, localStorage } from "$lib/index.js";
-	import { Loader2, Info, FastForward, X } from "lucide-svelte";
-	import { fade, slide } from "svelte/transition";
-	import { expoInOut } from "svelte/easing";
+	import { connected, connectWebsocket } from "$lib/index.js";
+	import { Loader2, Info, FastForward } from "lucide-svelte";
+	import { fade } from "svelte/transition";
 	import { ModeWatcher } from "mode-watcher";
 
 	connectWebsocket();
@@ -27,16 +26,7 @@
 		speed: 300
 	});
 
-	let title, showNews = (localStorage.get("showNews") ?? "true") === "true";
-	onMount(async() => {
-		const { text } = await import("../news.json");
-
-		if(text?.length > 0 && text !== localStorage.get("newsText")) {
-			localStorage.set("newsText", text);
-			localStorage.set("showNews", true);
-			showNews = true;
-		}
-	});
+	let title;
 
 	$: {
 		if(browser) $navigating ? nProgress.start() : nProgress.done();
@@ -49,13 +39,7 @@
 </svelte:head>
 
 <ModeWatcher />
-
-{#if showNews === true && localStorage.get("newsText")?.length > 0}
-	<div class="center row w-full p-3 bg-accent text-accent-foreground" transition:slide={{ duration: 400, easing: expoInOut }}>
-		<Button on:click={() => { showNews = false; localStorage.set("showNews", false); }} variant="primary" size="icon" class="absolute left-3 w-5 h-5"><X /></Button>
-		<p>{localStorage.get("newsText")}</p>
-	</div>
-{/if}
+<InteractionBeforeAudioDialog />
 
 <Button class="fixed -top-16 focus:top-4 left-4 z-50 transition-all gap-2" href="#main">
 	Skip Navigation
