@@ -31,7 +31,7 @@
             </div>
         </div>
     </div>
-</div>
-<div class="fixed bottom-5">
-    <Alert />
+    <div class="fixed bottom-5">
+        <Alert />
+    </div>
 </div>
