@@ -45,6 +45,15 @@ body {
 	@apply left-4;
 }
 
+.leaflet-popup-tip,
+.leaflet-popup-content-wrapper {
+	@apply !bg-background !text-foreground;
+}
+
+.leaflet-popup-close-button {
+	@apply !text-muted-foreground;
+}
+
 @layer base {
 	:root {
 		direction: rtl;
