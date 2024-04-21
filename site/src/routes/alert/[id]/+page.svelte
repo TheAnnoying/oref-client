@@ -82,7 +82,7 @@
 				</div>
 				{data.location.join(", ")}
 			</div>
-			<div id="map" in:fly={{ y: 10, opacity: 0, delay: 100 }} class="m-10 lg:w-[900px] lg:aspect-video lg:h-auto w-[350px] h-96 rounded-2xl bg-muted flex items-center justify-center border-border border-2">
+			<div id="map" in:fly={{ y: 10, opacity: 0, delay: 100 }} class="mt-10 lg:w-[900px] lg:aspect-video lg:h-auto w-[350px] h-96 rounded-2xl bg-muted flex items-center justify-center border-border border-2">
 				{#if !mapSetup && locationsFound.length === 0}
 					<p class="text-xl text-muted-foreground tracking-tight">לא ניתן להציג מפה למיקום המבוקש</p>
 				{:else if mapSetup && locationsFound.length < data.location.length}
