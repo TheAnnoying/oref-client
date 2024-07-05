@@ -8,10 +8,9 @@ const io = new Server(server, {
 });
 
 const fetchURLS = {
-	"history": "https://www.oref.org.il//Shared/Ajax/GetAlarmsHistory.aspx?lang=he&fromDate=01.01.2005&toDate=&mode=0",
+	"history": "https://alerts-history.oref.org.il//Shared/Ajax/GetAlarmsHistory.aspx?lang=he&fromDate=01.01.2005&toDate=&mode=0",
 	"alert": "https://www.oref.org.il/WarningMessages/alert/alerts.json",
-	"cities": "https://www.oref.org.il/Shared/Ajax/GetCitiesMix.aspx?lang=he",
-	"instructions": "https://www.oref.org.il/Shared/Ajax/GetAlarmInstructions.aspx?lang=he"
+	"cities": "https://alerts-history.oref.org.il/Shared/Ajax/GetCitiesMix.aspx?lang=he",
 }
 
 async function fetchData(type = "alert") {
@@ -76,15 +75,15 @@ function emit(name, value) {
 async function sendData() {
 	try {
 		const alert = await fetchData("alert");
-		const keyAmount = Object.keys(alert).length;
+		const isThereAlert = Object.values(alert).every(e => e?.length > 0);
 
-		if (keyAmount > 0) {
+		if (isThereAlert) {
 			alertRecently = true;
 
 			await emit("alert", alert);
-			await emit("instructions", await fetchData("instructions"));
-		} else if (keyAmount === 0 && alertRecently) {
+		} else if (!isThereAlert && alertRecently) {
 			alertRecently = false;
+
 			await emit("alert", {});
 			await emit("history", await fetchData("history"));
 		}
