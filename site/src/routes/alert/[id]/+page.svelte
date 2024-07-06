@@ -68,7 +68,7 @@
 					<Clock />
 					{relativeDate(data.date, data.time)}
 				</Tooltip.Trigger>
-				<Tooltip.Content class="font-mono">
+				<Tooltip.Content>
 					{relativeDate(data.date, data.time, true)}
 				</Tooltip.Content>
 			</Tooltip.Root>
