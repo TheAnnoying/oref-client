@@ -32,7 +32,7 @@
 </script>
 {#if Object.keys($alert).length > 0}
 	<div transition:fade={{ duration: 350 }}>
-		<Card.Root class="my-4 border-destructive !border-t-destructive shadow-[0_0_10px] shadow-destructive sm:w-[600px] w-[350px] hover:scale-110 transition-transform">
+		<Card.Root class="my-4 border-destructive !border-t-destructive !border-b-destructive shadow-[0_0_10px] shadow-destructive sm:w-[600px] w-[350px] hover:scale-110 transition-transform">
 			<Card.Header>
 				<Card.Title class="flex flex-row items-center gap-2">
 					<Radio />
