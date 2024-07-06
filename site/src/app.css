@@ -103,7 +103,7 @@ body {
 
 @layer base {
 	* {
-		@apply border-border dark:!border-t-zinc-700;
+		@apply border-border dark:!border-t-zinc-700 dark:!border-b-border !border-b-slate-300;
 	}
 	body {
 		@apply bg-background text-foreground;
