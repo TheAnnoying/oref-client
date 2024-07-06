@@ -9,7 +9,7 @@
 
     export let title;
 </script>
-<div id="navbar" class="sticky top-0 flex items-center backdrop-blur-md p-4 w-full border-b z-10">
+<div id="navbar" class="sticky top-0 flex items-center backdrop-blur-md p-4 w-full !border-b !border-b-border z-10">
     <div class="flex flex-[1]">
         <Badge variant="outline">
             <BarChart class="h-4 w-4 ml-1" />
@@ -20,7 +20,7 @@
     </div>
     <div>
         <a href="/" class="text-xl lowercase select-none" aria-label="עמוד הבית של האתר">Oref Client</a>
-        <Badge class="grid place-items-center !border-t-transparent">
+        <Badge class="grid place-items-center !border-t-transparent !border-b-transparent">
             {#key title}<span style="grid-row: 1; grid-column: 1;" in:fly={{ y: -12 }} out:fly={{ y: 12 }}>{title}</span>{/key}
         </Badge>
     </div>
