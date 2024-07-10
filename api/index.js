@@ -82,7 +82,7 @@ function emit(name, value) {
 async function sendData() {
 	try {
 		const alert = await fetchData("alert");
-		const isThereAlert = Object.values(alert) > 0 && Object.values(alert).every(e => e?.length > 0);
+		const isThereAlert = Object.values(alert).length > 0 && Object.values(alert).every(e => e?.length > 0);
 
 		if (isThereAlert) {
 			alertRecently = true;
