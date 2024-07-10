@@ -29,7 +29,7 @@
                     <Volume2 />
                 </Button>
                 <RadioGroup.Item class="!border-t-current !border-b-current" value={sound.id} id={sound.id} />
-                <label for="beep">{sound.name}</label>
+                <label for={sound.id}>{sound.name}</label>
             </div>
         {/each}
     </RadioGroup.Root>
