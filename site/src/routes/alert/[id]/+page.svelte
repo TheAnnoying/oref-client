@@ -67,11 +67,13 @@
 	});
 
 	function sharePage() {
-		if(browser) navigator.share({
+		const data = {
 			url: document.location.href,
 			text: "מקליינט פיקוד העורף",
 			title: locationsFound[0].type
-		});
+		}
+
+		if(browser && navigator?.canShare(data)) navigator.share(data);
 	}
 </script>
 <div class="fixed inset-0 -z-10 bg-gradient-to-t dark:from-[#2e1212] from-[#ffe1e1] to-transparent" in:fade={{ duration: 350 }}></div>
@@ -89,10 +91,12 @@
 						{relativeDate(data.date, data.time, true)}
 					</Tooltip.Content>
 				</Tooltip.Root>
-				<Button on:click={sharePage} variant="ghost" class="font-normal center row gap-2 text-muted-foreground">
-					<ExternalLink />
-					שיתוף
-				</Button>
+				{#if navigator?.canShare()}
+					<Button on:click={sharePage} variant="ghost" class="font-normal center row gap-2 text-muted-foreground">
+						<ExternalLink />
+						שיתוף
+					</Button>
+				{/if}
 			</div>
 			<div class="flex flex-row items-center text-4xl font-semibold tracking-tight gap-5">
 				<svelte:component this={alertIcons[data.type] ?? HelpCircle} class="h-11 w-11 text-destructive" />
