@@ -105,6 +105,7 @@
 		<InfiniteScroll window={true} threshold={100} on:loadMore={() => { page++; loadMoreHistory() }} />
 	</div>
 {:else if $history?.length === 0}
+	<Alert />
 	<p class="text-3xl font-semibold">אין התרעות.</p>
 {:else}
 	<div class="sm:w-[600px] w-[350px]">
