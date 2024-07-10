@@ -5,6 +5,7 @@
 
 	import { page } from "$app/stores";
 	import { onMount, tick } from "svelte";
+	import { browser } from "$app/environment";
 	import { relativeDate } from "$lib/components/util/relativeDate";
 
 	import { Button } from "$lib/components/ui/button";
@@ -12,7 +13,7 @@
 	import AlertTags from "$lib/components/ui/alert-tags.svelte";
 
 	import { fly, fade } from "svelte/transition";
-	import { Clock, HelpCircle, GripHorizontal } from "lucide-svelte";
+	import { Clock, HelpCircle, ExternalLink, GripHorizontal } from "lucide-svelte";
 	import { alertIcons } from "$lib/utils";
 	let locationsFound = [], mapSetup = false;
 
@@ -64,21 +65,35 @@
 			});
 		});
 	});
+
+	function sharePage() {
+		if(browser) navigator.share({
+			url: document.location.href,
+			text: "מקליינט פיקוד העורף",
+			title: locationsFound[0].type
+		});
+	}
 </script>
 <div class="fixed inset-0 -z-10 bg-gradient-to-t dark:from-[#2e1212] from-[#ffe1e1] to-transparent" in:fade={{ duration: 350 }}></div>
 <div class="flex flex-col items-center mt-7 mb-10 gap-3 max-w-7xl text-center" in:fly={{ y: 5, opacity: 0, duration: 350 }}>
 	{#if $history?.length > 0}
 		{#if $history.some(e => e.id === parseInt($page.params.id))}
 			{@const data = $history.find(e => e.id === +$page.params.id)}
-			<Tooltip.Root>
-				<Tooltip.Trigger class="flex flex-row gap-2 text-muted-foreground">
-					<Clock />
-					{relativeDate(data.date, data.time)}
-				</Tooltip.Trigger>
-				<Tooltip.Content>
-					{relativeDate(data.date, data.time, true)}
-				</Tooltip.Content>
-			</Tooltip.Root>
+			<div class="center row gap-5">
+				<Tooltip.Root>
+					<Tooltip.Trigger class="center row gap-2 text-muted-foreground">
+						<Clock />
+						{relativeDate(data.date, data.time)}
+					</Tooltip.Trigger>
+					<Tooltip.Content>
+						{relativeDate(data.date, data.time, true)}
+					</Tooltip.Content>
+				</Tooltip.Root>
+				<Button on:click={sharePage} variant="ghost" class="font-normal center row gap-2 text-muted-foreground">
+					<ExternalLink />
+					שיתוף
+				</Button>
+			</div>
 			<div class="flex flex-row items-center text-4xl font-semibold tracking-tight gap-5">
 				<svelte:component this={alertIcons[data.type] ?? HelpCircle} class="h-11 w-11 text-destructive" />
 				{data.type}
@@ -89,7 +104,7 @@
 				</div>
 				{data.location.join(", ")}
 			</div>
-			<div id="map" in:fly={{ y: 10, opacity: 0, delay: 100 }} class="transition-all mt-10 lg:w-[900px] lg:aspect-video lg:h-auto w-[350px] h-96 rounded-2xl bg-muted flex items-center justify-center border-border border-2">
+			<div id="map" in:fly={{ y: 10, opacity: 0, delay: 100 }} class="transition-all mt-10 lg:w-[900px] lg:aspect-video lg:h-auto w-[350px] h-96 rounded-2xl bg-muted flex items-center justify-center border-border border-2 !z-0">
 				{#if !mapSetup && locationsFound.length === 0}
 					<p class="text-xl text-muted-foreground tracking-tight">לא ניתן להציג מפה למיקום המבוקש</p>
 				{:else if mapSetup && locationsFound.length < data.location.length}
