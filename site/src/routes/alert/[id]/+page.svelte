@@ -15,11 +15,11 @@
 	import { fly, fade } from "svelte/transition";
 	import { Clock, HelpCircle, ExternalLink, GripHorizontal } from "lucide-svelte";
 	import { alertIcons } from "$lib/utils";
-	let locationsFound = [], mapSetup = false;
+	let locationsFound = [], mapSetup = false, shareData = {};
 
 	onMount(async() => {
 		const L = await import("leaflet");
-		
+
 		const markerIcon = L.icon({
 			iconUrl: "/marker-icon.svg",
 			iconSize: [30, 42]
@@ -32,6 +32,12 @@
 				location.forEach(location => {
 					if(locationList[location]) locationsFound.push(location);
 				});
+
+				shareData = {
+					url: document.location.href,
+					text: "מקליינט פיקוד העורף",
+					title: locationsFound[0].type
+				}
 
 				if(locationsFound.length !== 0) {
 					const map = L.map("map", { zoomControl: false }).setView([
@@ -67,13 +73,7 @@
 	});
 
 	function sharePage() {
-		const data = {
-			url: document.location.href,
-			text: "מקליינט פיקוד העורף",
-			title: locationsFound[0].type
-		}
-
-		if(browser && navigator?.canShare(data)) navigator.share(data);
+		if(browser && navigator?.canShare(shareData)) navigator.share(shareData);
 	}
 </script>
 <div class="fixed inset-0 -z-10 bg-gradient-to-t dark:from-[#2e1212] from-[#ffe1e1] to-transparent" in:fade={{ duration: 350 }}></div>
@@ -91,7 +91,7 @@
 						{relativeDate(data.date, data.time, true)}
 					</Tooltip.Content>
 				</Tooltip.Root>
-				{#if navigator?.canShare()}
+				{#if navigator?.canShare(shareData)}
 					<Button on:click={sharePage} variant="ghost" class="font-normal center row gap-2 text-muted-foreground">
 						<ExternalLink />
 						שיתוף
