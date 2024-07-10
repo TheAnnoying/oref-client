@@ -45,11 +45,18 @@ async function fetchData(type = "alert") {
 		}).then(e => e.text()).then(e => e.trim());
 
 		if (res.length > 0) {
-			const raw = JSON.parse(res);
+			let raw = {};
+
+			try {
+				raw = JSON.parse(res);
+			} catch(error) {
+				console.error(error)
+			}
+
 			alert = {
-				type: raw.title,
-				locations: raw.data,
-				description: raw.desc
+				type: raw?.title,
+				locations: raw?.data,
+				description: raw?.desc
 			}
 		}
 
