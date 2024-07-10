@@ -19,7 +19,7 @@ export let
     connected = writable(false),
     cities = writable([]),
     usercount = writable(0),
-    interactionBeforeBrowserAudioDialogOpen = writable(true),
+    interactionBeforeBrowserAudioDialogOpen = writable(false),
     preferredLocations = writable(JSON?.parse(localStorage.get("preferredLocations") ?? "[]")),
     alertSound = writable(JSON?.parse(localStorage.get("alertSound") ?? "\"beep\""));
     
@@ -35,6 +35,8 @@ export function connectWebsocket() {
 
     socket.on("connect", () => {
         log("Connected to WS");
+
+        interactionBeforeBrowserAudioDialogOpen.set(true);
         setConnected(true);
     });
 
