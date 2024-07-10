@@ -33,7 +33,10 @@
 				});
 
 				if(locationsFound.length !== 0) {
-					const map = L.map("map", { zoomControl: false }).setView([32, 35], 13);
+					const map = L.map("map", { zoomControl: false }).setView([
+						(locationsFound.map(e => parseFloat(locationList[e].centerY)).reduce((total, num) => total + num))/locationsFound.length,
+						(locationsFound.map(e => parseFloat(locationList[e].centerX)).reduce((total, num) => total + num))/locationsFound.length
+					], 13);
 					map.setZoom(8);
 
 					L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -45,7 +48,11 @@
 					mapSetup = true;
 
 					locationsFound.forEach(location => {
-						const marker = L.marker([locationList[location].centerY, locationList[location].centerX], { icon: markerIcon }).addTo(map);
+						const marker = L.marker([
+							parseFloat(locationList[location].centerY),
+							parseFloat(locationList[location].centerX)
+						], { icon: markerIcon }).addTo(map);
+
 						marker.bindPopup(`
 						<div style="text-align: center">
 							<p style="margin: 0;">${location}</p>
@@ -82,7 +89,7 @@
 				</div>
 				{data.location.join(", ")}
 			</div>
-			<div id="map" in:fly={{ y: 10, opacity: 0, delay: 100 }} class="mt-10 lg:w-[900px] lg:aspect-video lg:h-auto w-[350px] h-96 rounded-2xl bg-muted flex items-center justify-center border-border border-2">
+			<div id="map" in:fly={{ y: 10, opacity: 0, delay: 100 }} class="transition-all mt-10 lg:w-[900px] lg:aspect-video lg:h-auto w-[350px] h-96 rounded-2xl bg-muted flex items-center justify-center border-border border-2">
 				{#if !mapSetup && locationsFound.length === 0}
 					<p class="text-xl text-muted-foreground tracking-tight">לא ניתן להציג מפה למיקום המבוקש</p>
 				{:else if mapSetup && locationsFound.length < data.location.length}
