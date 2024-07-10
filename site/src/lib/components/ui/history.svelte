@@ -32,7 +32,7 @@
 	loadMoreHistory(true);
 </script>
 {#if $history?.length > 0}
-	<div class="max-h-screen sm:w-[600px] w-[350px]" in:fade={{ duration: 150 }}>
+	<div class="transition-all max-h-screen sm:w-[600px] w-[350px]" in:fade={{ duration: 150 }}>
 		<div class="flex flex-row items-center gap-4">
 			<Select.Root preventScroll={false} selected={{
 				value: localStorage.get("historyFilter") ?? "כל ההתרעות",
