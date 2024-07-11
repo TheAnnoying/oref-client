@@ -71,10 +71,6 @@
 			});
 		});
 	});
-
-	function sharePage() {
-		if(browser && navigator?.canShare(shareData)) navigator.share(shareData);
-	}
 </script>
 <div class="fixed inset-0 -z-10 bg-gradient-to-t dark:from-[#2e1212] from-[#ffe1e1] to-transparent" in:fade={{ duration: 350 }}></div>
 <div class="flex flex-col items-center mt-7 mb-10 gap-3 max-w-7xl text-center" in:fly={{ y: 5, opacity: 0, duration: 350 }}>
@@ -91,8 +87,8 @@
 						{relativeDate(data.date, data.time, true)}
 					</Tooltip.Content>
 				</Tooltip.Root>
-				{#if navigator?.canShare(shareData)}
-					<Button on:click={sharePage} variant="ghost" class="font-normal center row gap-2 text-muted-foreground">
+				{#if navigator.canShare?.(shareData)}
+					<Button on:click={() => navigator.share(shareData)} variant="ghost" class="font-normal center row gap-2 text-muted-foreground">
 						<ExternalLink />
 						שיתוף
 					</Button>
