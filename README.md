@@ -1,6 +1,8 @@
 # oref-client
 > An alternative website to view real-time missile alerts from Israel's National Emergency Portal (פיקוד העורף)
 
+![Preview](https://github.com/user-attachments/assets/62cbaa16-247a-4fe6-be26-2093f887a7e4)
+
 ## Story
 When using the National Emergency Portal website, I noticed a few issues:
 * The site makes constant requests from the client to check for ongoing alerts
