@@ -7,3 +7,12 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: on-failure
+  tunnel:
+    container_name: cloudflared-tunnel
+    image: cloudflare/cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=mytoken
+
+
