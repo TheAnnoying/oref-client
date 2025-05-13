@@ -2,7 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { cubicOut } from "svelte/easing";
 import type { TransitionConfig } from "svelte/transition";
-import { Rocket, PlaneTakeoff, Sword, Home, Radiation, Waves, AlertOctagon } from "lucide-svelte";
+import { Rocket, PlaneTakeoff, Sword, Home, Radiation, Waves, AlertOctagon, ShieldAlert } from "lucide-svelte";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -28,6 +28,7 @@ export const alertIcons = {
 	"אירוע רדיולוגי": Radiation,
 	"צונאמי": Waves,
 	"אירוע חומרים מסוכנים": AlertOctagon,
+	"עדכון": ShieldAlert
 }
 
 type FlyAndScaleParams = {
