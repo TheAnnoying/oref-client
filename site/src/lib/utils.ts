@@ -17,7 +17,16 @@ export const routes = {
 	"/": "עמוד בית",
 	"/settings": "הגדרות",
 	"/alert/[id]": "התרעות",
+	"/map": "מפה",
 	"/404": "לא נמצא"
+}
+
+export const floatingNavbar = {
+	"/": false,
+	"/settings": false,
+	"/alert/[id]": false,
+	"/map": true,
+	"/404": false
 }
 
 export const alertIcons = {

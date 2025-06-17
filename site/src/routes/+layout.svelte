@@ -8,7 +8,7 @@
 	import nProgress from "nprogress";
 	import { browser } from "$app/environment";
 	import { navigating } from "$app/stores";
-	import { routes } from "$lib/utils";
+	import { routes, floatingNavbar } from "$lib/utils";
 	import { page } from "$app/stores";
 
 	import { connected, connectWebsocket } from "$lib/index.js";
@@ -26,11 +26,12 @@
 		speed: 300
 	});
 
-	let title;
+	let title, forceFloating = false;
 
 	$: {
 		if(browser) $navigating ? nProgress.start() : nProgress.done();
 		title = routes[$page.route.id ?? "/404"];
+		forceFloating = floatingNavbar[$page.route.id ?? "default"]
 	}
 </script>
 
@@ -48,9 +49,9 @@
 
 {#if $connected === true && browser}
 	<div class="contents">
-		<Navbar {title} />
+		<Navbar {title} {forceFloating} />
 		<a class="md:block hidden fixed bottom-5 right-5" href="https://www.oref.org.il/12761-he/Pakar.aspx" aria-label="קישור למידע באתר פיקוד העורף לגבי התרעות" target="_blank"><Info /></a>
-		<main id="main"><slot /></main>
+		<main id="main" class="max-w-full max-h-full"><slot /></main>
 	</div>
 {:else}
 	<div class="center row fixed w-screen h-screen gap-5 z-20" transition:fade={{ duration: 75 }}>
