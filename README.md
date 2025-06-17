@@ -1,9 +1,9 @@
 # oref-client
 > An alternative website to view real-time missile alerts from Israel's National Emergency Portal (פיקוד העורף)
 
-![Preview](https://github.com/user-attachments/assets/62cbaa16-247a-4fe6-be26-2093f887a7e4)
+![Preview](https://raw.githubusercontent.com/TheAnnoying/oref-client/refs/heads/main/banner.png)
 
-## Story
+## Background
 When using the National Emergency Portal website, I noticed a few issues:
 * The site makes constant requests from the client to check for ongoing alerts
 * The site has many buttons all around, which may be confusing
@@ -18,11 +18,12 @@ That server is responsible for making requests to the National Emergency Portal 
 Data is only sent to all the clients connected when it is needed. For example, the alert history is sent to clients after alerts, not every few seconds.
 Even if many people were to open my site, the National Emergency Portal's servers would only receive constant requests from a single source, that is, my websocket server.
 
-## This website contains
+## Contains
 * A sleek, minimal interface
 * No constant requests to the National Emergency Portal servers
-* The ability to add locations for which sound should be heard during an alert
-* The ability to give locations tags to be identifiable
+* Select which locations should emit alert sound and give them tags to identify quickly
+* Different alert sounds
+* Live map with alerts
 
 ## Built using:
 * [SvelteKit](https://kit.svelte.dev/) (javascript framework)
