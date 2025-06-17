@@ -10,7 +10,8 @@ export function cn(...inputs: ClassValue[]) {
 
 export const sounds = [
 	{ id: "beep", name: "ביפ (ברירת מחדל)", path: "alarms/beep.mp3" },
-	{ id: "realistic", name: "מציאותי (מאתר פיקוד העורף)", path: "alarms/realistic.mp4" }
+	{ id: "realistic", name: "מציאותי (מאתר פיקוד העורף)", path: "alarms/realistic.mp4" },
+	{ id: "bell", name: "פעמון", path: "alarms/bell.mp3" }
 ]
 
 export const routes = {
