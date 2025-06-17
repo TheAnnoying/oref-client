@@ -1,5 +1,6 @@
 <script>
-    import { alert, localStorage, preferredLocations } from "$lib/index.js";
+    import { alert, localStorage, preferredLocations, muted } from "$lib/index.js";
+	import { get } from "svelte/store";
 	import { sounds } from "$lib/utils";
     import { Radio } from "lucide-svelte";
 	import { fade } from "svelte/transition";
@@ -17,8 +18,8 @@
 		const sound = new Howl({ src: sounds.find(s => s.id === (localStorage.get("sound") ?? "beep")).path, loop: true });
 
 		alert.subscribe(() => {
-			const keyAmount = Object.keys($alert).length;
-			const shouldPlaySound = keyAmount > 0 && ($preferredLocations.length === 0 ? true : $preferredLocations.some(e => $alert?.locations?.includes(e[0])));
+			const keyAmount = Object.keys(get(alert)).length;
+			const shouldPlaySound = !get(muted) && keyAmount > 0 && ($preferredLocations.length === 0 ? true : $preferredLocations.some(e => $alert?.locations?.includes(e[0])));
 
 			if (shouldPlaySound && !soundPlaying) {
 				soundPlaying = true;
@@ -32,11 +33,11 @@
 </script>
 {#if Object.keys($alert).length > 0}
 	<div transition:fade={{ duration: 350 }}>
-		<Card.Root class="my-4 border-destructive !border-t-destructive !border-b-destructive shadow-[0_0_10px] shadow-destructive sm:w-[600px] w-[350px] hover:scale-110 transition-transform">
+		<Card.Root class="my-4 border-destructive !border-t-destructive !border-b-destructive shadow-[0_0_5px] shadow-destructive sm:w-[600px] w-[350px] transition-transform">
 			<Card.Header>
 				<Card.Title class="flex flex-row items-center gap-2">
 					<Radio />
-					אזעקה כרגע!
+					התרעה כרגע
 					<div class="flex sm:flex-wrap flex-row gap-1 max-w-12 sm:max-w-64 overflow-auto">
 						<AlertTags alertLocations={$alert.locations} />
 					</div>
