@@ -23,7 +23,7 @@ export let
     preferredLocations = writable(JSON?.parse(localStorage.get("preferredLocations") ?? "[]")),
     alertSound = writable(JSON?.parse(localStorage.get("alertSound") ?? "\"beep\"")),
     muted = writable(JSON?.parse(localStorage.get("muted") ?? "false"));
-    
+
 export function connectWebsocket() {
     const socket = io(import.meta.env.VITE_API_URL);
 

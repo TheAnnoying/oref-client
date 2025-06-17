@@ -1,6 +1,6 @@
 <script>
     import { toggleMode } from "mode-watcher";
-    import { usercount, muted } from "$lib/index.js";
+    import { usercount, muted, localStorage } from "$lib/index.js";
     import { Sun, Moon, Settings2, BarChart, MapPin, Volume2, VolumeX } from "lucide-svelte";
 
     import { Button } from "$lib/components/ui/button";
@@ -9,6 +9,10 @@
 
     export let forceFloating = false;
     export let title;
+
+    muted.subscribe(value => {
+        localStorage.set("muted", value.toString());
+    });
 </script>
 <div id="navbar" class="{forceFloating ? '' : 'sm:top-0 sm:rounded-none sm:w-full sm:!border-b-border'} transition-all sticky bg-background bg-opacity-40 top-2 flex items-center rounded-md backdrop-blur-lg p-4 w-3/4 !border-b !border-b-destructive z-10">
     <div class="flex flex-[1] gap-1">
