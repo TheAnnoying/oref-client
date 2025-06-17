@@ -5,7 +5,7 @@
     
     preferredLocations.subscribe(value => localStorage.set("preferredLocations", JSON.stringify(value)));
     let open = false, input, filteredCities = [];
-    $: { filteredCities = $cities.filter(city => city.includes(input)).slice(0, 25); console.log(filteredCities) }
+    $: { filteredCities = $cities.filter(city => city.includes(input)).slice(0, 25); }
 
     import { Button } from "$lib/components/ui/button";
     import * as Command from "$lib/components/ui/command";

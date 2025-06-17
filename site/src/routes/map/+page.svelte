@@ -48,10 +48,9 @@
 		});
 	});
 </script>
-<Alert />
-<div id="map" class="w-full h-full absolute inset-0 bg-muted flex items-center justify-center !z-0">
+<div id="map" class="absolute inset-0 bg-muted flex items-center justify-center !z-0">
     {#if locationsFound.length < $alert?.locations?.length}
-        <p class="top-0 absolute transition-all text-md text-white bg-muted py-1 mt-1 px-3 rounded-md tracking-tight z-[400] flex items-center gap-1">
+        <p class="top-0 absolute transition-all text-md text-foreground bg-muted py-1 mt-1 px-3 rounded-md tracking-tight z-[400] flex items-center gap-1">
             לא היה ניתן להציג על המפה את כל המיקומים
         </p>
     {/if}

@@ -18,7 +18,7 @@
 
 	connectWebsocket();
 	nProgress.configure({
-		parent: "#navbar",
+		parent: "body",
 		minimum: 0.4,
 		trickleSpeed: 200,
 		showSpinner: false,
@@ -51,7 +51,7 @@
 	<div class="contents">
 		<Navbar {title} {forceFloating} />
 		<a class="md:block hidden fixed bottom-5 right-5" href="https://www.oref.org.il/12761-he/Pakar.aspx" aria-label="קישור למידע באתר פיקוד העורף לגבי התרעות" target="_blank"><Info /></a>
-		<main id="main" class="max-w-full max-h-full"><slot /></main>
+		<main id="main"><slot /></main>
 	</div>
 {:else}
 	<div class="center row fixed w-screen h-screen gap-5 z-20" transition:fade={{ duration: 75 }}>

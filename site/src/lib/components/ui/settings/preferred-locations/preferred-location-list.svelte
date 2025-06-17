@@ -34,7 +34,7 @@
                                 <Plus class="w-3 h-3" />
                             </Button>
                         </Popover.Trigger>
-                        <Popover.Content class="transition-all">
+                        <Popover.Content class="transition-all w-fit">
                             <form class="flex flex-row items-center justify-between gap-5">
                                 <Input placeholder="הוסף תג למיקום" class="w-fit" bind:value={taginput} />
                                 <Button disabled={taginput && !$preferredLocations.flatMap(() => city[1]).includes(taginput) ? "" : "true"} type="submit" size="icon" on:click={() => { $preferredLocations = [...$preferredLocations.map(e => {

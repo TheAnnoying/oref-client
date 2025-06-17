@@ -31,15 +31,15 @@
         </Button>
     </div>
     <div>
-        <a href="/" class="text-xl lowercase select-none" aria-label="עמוד הבית של האתר">Oref Client</a>
+        <a href="/" class="text-center text-xl lowercase select-none" aria-label="עמוד הבית של האתר">Oref Client</a>
         <Badge class="{forceFloating ? '' : 'sm:grid'} hidden place-items-center !border-t-transparent !border-b-transparent">
             {#key title}<span style="grid-row: 1; grid-column: 1;" in:fly={{ y: -12 }} out:fly={{ y: 12 }}>{title}</span>{/key}
         </Badge>
     </div>
     <div class="flex flex-[1] justify-end gap-1">
-        <Button class="bg-opacity-50" variant="outline" size="icon" href="/map" aria-label="עמוד המפה של האתר"><MapPin /></Button>
-        <Button class="bg-opacity-50" variant="outline" size="icon" href="/settings" aria-label="עמוד ההגדרות של האתר"><Settings2 /></Button>
-        <Button class="bg-opacity-50" on:click={toggleMode} variant="outline" size="icon" aria-label="כפתור לשינוי נראות האתר - בהיר או כהה">
+        <Button class="bg-opacity-30" variant="outline" size="icon" href="/map" aria-label="עמוד המפה של האתר"><MapPin /></Button>
+        <Button class="bg-opacity-30" variant="outline" size="icon" href="/settings" aria-label="עמוד ההגדרות של האתר"><Settings2 /></Button>
+        <Button class="bg-opacity-30" on:click={toggleMode} variant="outline" size="icon" aria-label="כפתור לשינוי נראות האתר - בהיר או כהה">
             <Sun class="hidden dark:block" />
             <Moon class="dark:hidden" />
         </Button>

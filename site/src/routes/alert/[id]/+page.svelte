@@ -108,7 +108,7 @@
 				{#if !mapSetup && locationsFound.length === 0}
 					<p class="text-xl text-muted-foreground tracking-tight">לא ניתן להציג מפה למיקום המבוקש</p>
 				{:else if mapSetup && locationsFound.length < data.location.length}
-					<p class="{hideWarning ? '-top-[30px] opacity-0' : 'top-0'} absolute transition-all text-md text-white bg-muted py-1 mt-1 px-3 rounded-md tracking-tight z-[400] flex items-center gap-1">
+					<p class="{hideWarning ? '-top-[30px] opacity-0' : 'top-0'} absolute transition-all text-md text-foreground bg-muted py-1 mt-1 px-3 rounded-md tracking-tight z-[400] flex items-center gap-1">
 						<Button variant="ghost" size="icon" class="w-min h-min" on:click={() => hideWarning = true}><X size="16" /></Button>
 						לא היה ניתן להציג על המפה את כל המיקומים
 					</p>
