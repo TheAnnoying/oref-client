@@ -13,9 +13,9 @@
 	import AlertTags from "$lib/components/ui/alert-tags.svelte";
 
 	import { fly, fade } from "svelte/transition";
-	import { Clock, HelpCircle, ExternalLink, GripHorizontal } from "lucide-svelte";
+	import { Clock, HelpCircle, ExternalLink, X } from "lucide-svelte";
 	import { alertIcons } from "$lib/utils";
-	let locationsFound = [], mapSetup = false, shareData = {};
+	let locationsFound = [], mapSetup = false, shareData = {}, hideWarning = false;
 
 	onMount(async() => {
 		const L = await import("leaflet");
@@ -108,9 +108,9 @@
 				{#if !mapSetup && locationsFound.length === 0}
 					<p class="text-xl text-muted-foreground tracking-tight">לא ניתן להציג מפה למיקום המבוקש</p>
 				{:else if mapSetup && locationsFound.length < data.location.length}
-					<p class="absolute -top-[60px] lg:-top-[30px] hover:top-0 transition-all text-lg text-white bg-destructive py-1 px-12 rounded-b-md tracking-tight z-[400] grid place-items-center">
+					<p class="{hideWarning ? '-top-[30px] opacity-0' : 'top-0'} absolute transition-all text-md text-white bg-muted py-1 mt-1 px-3 rounded-md tracking-tight z-[400] flex items-center gap-1">
+						<Button variant="ghost" size="icon" class="w-min h-min" on:click={() => hideWarning = true}><X size="16" /></Button>
 						לא היה ניתן להציג על המפה את כל המיקומים
-						<GripHorizontal />
 					</p>
 				{/if}
 			</div>
