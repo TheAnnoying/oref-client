@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
     import "leaflet/dist/leaflet.css";
 	import locationList from "/src/locations.json";
     import { onMount, tick } from "svelte";
-    import { alert } from "$lib/index.js";
-	import Alert from "$lib/components/ui/alert.svelte";
+    import { alert } from "$lib/index.ts";
+    import { fly } from "svelte/transition";
     let locationsFound = [];
 
     onMount(async() => {
@@ -16,7 +16,7 @@
 
         const map = L.map("map", { zoomControl: false }).setView([31.0461, 34.8516], 13);
         map.setZoom(8);
-
+        
         L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 13,
             minZoom: 6,
@@ -48,9 +48,9 @@
 		});
 	});
 </script>
-<div id="map" class="absolute inset-0 bg-muted flex items-center justify-center !z-0">
+<div id="map" in:fly={{ y: 5, opacity: 0, duration: 350 }} class="absolute inset-0 bg-muted flex items-center justify-center !z-0">
     {#if locationsFound.length < $alert?.locations?.length}
-        <p class="top-0 absolute transition-all text-md text-foreground bg-muted py-1 mt-1 px-3 rounded-md tracking-tight z-[400] flex items-center gap-1">
+        <p class="top-0 absolute transition-all text-md text-foreground bg-muted py-1 mt-1 px-3 rounded-md tracking-tight z-999 flex items-center gap-1">
             לא היה ניתן להציג על המפה את כל המיקומים
         </p>
     {/if}

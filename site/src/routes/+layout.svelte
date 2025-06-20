@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import "../app.css";
 	import "nprogress/nprogress.css";
 	import { Button } from "$lib/components/ui/button";
@@ -7,14 +7,20 @@
 
 	import nProgress from "nprogress";
 	import { browser } from "$app/environment";
-	import { navigating } from "$app/stores";
-	import { routes, floatingNavbar } from "$lib/utils";
-	import { page } from "$app/stores";
+	import { navigating } from "$app/state";
+	import { page } from "$app/state";
 
-	import { connected, connectWebsocket } from "$lib/index.js";
-	import { Loader2, Info, FastForward } from "lucide-svelte";
+	import { connected, connectWebsocket } from "$lib/index.ts";
+	import { Loader, Info, FastForward } from "@lucide/svelte";
 	import { fade } from "svelte/transition";
 	import { ModeWatcher } from "mode-watcher";
+	/**
+	 * @typedef {Object} Props
+	 * @property {import('svelte').Snippet} [children]
+	 */
+
+	/** @type {Props} */
+	let { children } = $props();
 
 	connectWebsocket();
 	nProgress.configure({
@@ -26,13 +32,10 @@
 		speed: 300
 	});
 
-	let title, forceFloating = false;
-
-	$: {
-		if(browser) $navigating ? nProgress.start() : nProgress.done();
-		title = routes[$page.route.id ?? "/404"];
-		forceFloating = floatingNavbar[$page.route.id ?? "default"]
-	}
+	$effect(() => {
+		if(navigating.to) nProgress.start()
+		else nProgress.done();
+	});
 </script>
 
 <svelte:head>
@@ -49,12 +52,12 @@
 
 {#if $connected === true && browser}
 	<div class="contents">
-		<Navbar {title} {forceFloating} />
+		<Navbar route={page.route.id} />
 		<a class="md:block hidden fixed bottom-5 right-5" href="https://www.oref.org.il/12761-he/Pakar.aspx" aria-label="קישור למידע באתר פיקוד העורף לגבי התרעות" target="_blank"><Info /></a>
-		<main id="main"><slot /></main>
+		<main id="main">{@render children?.()}</main>
 	</div>
 {:else}
 	<div class="center row fixed w-screen h-screen gap-5 z-20" transition:fade={{ duration: 75 }}>
-		<Loader2 class="animate-spin h-11 w-11" />
+		<Loader size=24 class="animate-spin" />
 	</div>
 {/if}

@@ -1,21 +1,22 @@
 import { io } from "socket.io-client";
-import { log } from "./components/util/log.js";
-import { writable } from "svelte/store";
+import { log, type History, type Alert } from "$lib/utils.ts";
+import { writable, type Writable } from "svelte/store";
 import { browser } from "$app/environment";
 
 export const localStorage = {
-    get: (name) => {
+    get: (name: string): string | null => {
         if(browser) return window.localStorage.getItem(name);
+        return null;
     },
-    set: (name, value) => {
+    set: (name: string, value: string): string => {
         if(browser) window.localStorage.setItem(name, value);
         return value;
     }
 }
 
 export let
-    history = writable(),
-    alert = writable({}),
+    history: Writable<History[] | unknown> = writable(),
+    alert: Writable<Alert | unknown> = writable({}),
     connected = writable(false),
     cities = writable([]),
     usercount = writable(0),
@@ -32,7 +33,7 @@ export function connectWebsocket() {
     socket.on("alert", msg => alert.set(msg));
     socket.on("history", msg => history.set(msg));
 
-    const setConnected = (bool = false) => connected.set(bool);
+    const setConnected = (bool: boolean = false): void => connected.set(bool);
 
     socket.on("connect", () => {
         log("Connected to WS");
@@ -42,7 +43,6 @@ export function connectWebsocket() {
     });
 
     socket.io.on("reconnect_failed", setConnected);
-    socket.io.on("connect_error", setConnected);
     socket.io.on("error", setConnected);
     socket.on("disconnect", setConnected);
     socket.on("connect", () => setConnected(true));

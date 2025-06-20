@@ -1,21 +1,21 @@
-<script>
+<script lang="ts">
 	import "leaflet/dist/leaflet.css";
 	import locationList from "/src/locations.json";
-	import { history } from "$lib/index.js";
+	import { history } from "$lib/index.ts";
 
-	import { page } from "$app/stores";
+	import { page } from "$app/state";
 	import { onMount, tick } from "svelte";
-	import { browser } from "$app/environment";
-	import { relativeDate } from "$lib/components/util/relativeDate";
+	import { relativeDate } from "$lib/utils.ts";
 
 	import { Button } from "$lib/components/ui/button";
-	import * as Tooltip from "$lib/components/ui/tooltip";
+	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
 	import AlertTags from "$lib/components/ui/alert-tags.svelte";
 
 	import { fly, fade } from "svelte/transition";
-	import { Clock, HelpCircle, ExternalLink, X } from "lucide-svelte";
-	import { alertIcons } from "$lib/utils";
-	let locationsFound = [], mapSetup = false, shareData = {}, hideWarning = false;
+	import { Clock, HelpCircle, ExternalLink, X } from "@lucide/svelte";
+	import { alertIcons } from "$lib/utils.ts";
+
+	let locationsFound: string[] = [], mapSetup = $state(false), shareData = $state({}), hideWarning = $state(false);
 
 	onMount(async() => {
 		const L = await import("leaflet");
@@ -27,7 +27,7 @@
 
 		history.subscribe(() => {
 			tick().then(() => {
-				const location = $history?.find(e => e.id === +$page.params.id)?.location ?? [];
+				const location = $history?.find(e => e.id === +page.params.id)?.location ?? [];
 
 				location.forEach(location => {
 					if(locationList[location]) locationsFound.push(location);
@@ -72,30 +72,33 @@
 		});
 	});
 </script>
-<div class="fixed inset-0 -z-10 bg-gradient-to-t dark:from-[#2e1212] from-[#ffe1e1] to-transparent" in:fade={{ duration: 350 }}></div>
+<div class="fixed inset-0 -z-10 bg-linear-to-t dark:from-[#2e1212] from-[#ffe1e1] to-transparent" in:fade={{ duration: 350 }}></div>
 <div class="flex flex-col items-center mt-7 mb-10 gap-3 max-w-7xl text-center" in:fly={{ y: 5, opacity: 0, duration: 350 }}>
 	{#if $history?.length > 0}
-		{#if $history.some(e => e.id === parseInt($page.params.id))}
-			{@const data = $history.find(e => e.id === +$page.params.id)}
-			<div class="center row gap-5">
-				<Tooltip.Root>
-					<Tooltip.Trigger class="center row gap-2 text-muted-foreground">
-						<Clock />
-						{relativeDate(data.date, data.time)}
-					</Tooltip.Trigger>
-					<Tooltip.Content>
-						{relativeDate(data.date, data.time, true)}
-					</Tooltip.Content>
-				</Tooltip.Root>
+		{#if $history.some(e => e.id === parseInt(page.params.id))}
+			{@const data = $history.find(e => e.id === +page.params.id)}
+			<div class="center flex-row gap-5">
+				<Tooltip.Provider>
+					<Tooltip.Root>
+						<Tooltip.Trigger class="center row gap-2 text-muted-foreground">
+							<Clock />
+							{relativeDate(data.date, data.time)}
+						</Tooltip.Trigger>
+						<Tooltip.Content>
+							{relativeDate(data.date, data.time, true)}
+						</Tooltip.Content>
+					</Tooltip.Root>
+				</Tooltip.Provider>
 				{#if navigator.canShare?.(shareData)}
-					<Button on:click={() => navigator.share(shareData)} variant="ghost" class="font-normal center row gap-2 text-muted-foreground">
+					<Button onclick={() => navigator.share(shareData)} variant="ghost" class="font-normal center row gap-2 text-muted-foreground">
 						<ExternalLink />
 						שיתוף
 					</Button>
 				{/if}
 			</div>
+			{@const SvelteComponent = alertIcons[data.type] ?? HelpCircle}
 			<div class="flex flex-row items-center text-4xl font-semibold tracking-tight gap-5">
-				<svelte:component this={alertIcons[data.type] ?? HelpCircle} class="h-11 w-11 text-destructive" />
+				<SvelteComponent class="h-11 w-11 text-destructive" />
 				{data.type}
 			</div>
 			<div class="flex flex-col justify-center items-center">
@@ -108,8 +111,8 @@
 				{#if !mapSetup && locationsFound.length === 0}
 					<p class="text-xl text-muted-foreground tracking-tight">לא ניתן להציג מפה למיקום המבוקש</p>
 				{:else if mapSetup && locationsFound.length < data.location.length}
-					<p class="{hideWarning ? '-top-[30px] opacity-0' : 'top-0'} absolute transition-all text-md text-foreground bg-muted py-1 mt-1 px-3 rounded-md tracking-tight z-[400] flex items-center gap-1">
-						<Button variant="ghost" size="icon" class="w-min h-min" on:click={() => hideWarning = true}><X size="16" /></Button>
+					<p class="{hideWarning ? '-top-[30px] opacity-0' : 'top-0'} absolute transition-all text-md text-foreground bg-muted py-1 mt-1 px-3 rounded-md tracking-tight z-999 flex items-center gap-1">
+						<Button variant="ghost" size="icon" class="size-min" onclick={() => hideWarning = true}><X size="16" /></Button>
 						לא היה ניתן להציג על המפה את כל המיקומים
 					</p>
 				{/if}

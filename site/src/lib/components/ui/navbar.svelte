@@ -1,47 +1,59 @@
-<script>
+<script lang="ts">
     import { toggleMode } from "mode-watcher";
-    import { usercount, muted, localStorage } from "$lib/index.js";
-    import { Sun, Moon, Settings2, BarChart, MapPin, Volume2, VolumeX } from "lucide-svelte";
+    import { usercount, muted, localStorage } from "$lib/index.ts";
+    import { Sun, Moon, Settings2, ChartNoAxesColumnIncreasing, MapPin, Volume2, VolumeX, House } from "@lucide/svelte";
 
+    import * as Tabs from "$lib/components/ui/tabs/index.js";
     import { Button } from "$lib/components/ui/button";
     import { Badge } from "$lib/components/ui/badge";
-    import { fly } from "svelte/transition";
+    import { Separator } from "$lib/components/ui/separator/index.js";
 
-    export let forceFloating = false;
-    export let title;
+    /**
+     * @typedef {Object} Props
+     * @property {any} title
+     */
+
+    /** @type {Props} */
+    let { route } = $props();
 
     muted.subscribe(value => {
         localStorage.set("muted", value.toString());
     });
 </script>
-<div id="navbar" class="{forceFloating ? '' : 'sm:top-0 sm:rounded-none sm:w-full sm:!border-b-border'} transition-all sticky bg-background bg-opacity-40 top-2 flex items-center rounded-md backdrop-blur-lg p-4 w-3/4 !border-b !border-b-destructive z-10">
-    <div class="flex flex-[1] gap-1">
+<div class="bg-accent/[var(--bg-opacity)] [--bg-opacity:40%] sticky top-2 flex items-center rounded-2xl backdrop-blur-lg p-2 gap-6 z-10">
+    <div class="flex flex-1 gap-1">
         <Badge variant="outline">
-            <BarChart class="h-4 w-4 ml-1" />
-            <p class="{forceFloating ? '' : 'md:block'} hidden ml-1">משתמשים:</p>
+            <ChartNoAxesColumnIncreasing size="16" />
             <p>{$usercount ?? "0"}</p>
         </Badge>
         <p class="sr-only">כמות האנשים המחוברים לאתר כרגע</p>
-        <Button on:click={() => $muted = !$muted} class="bg-transparent h-auto w-auto p-1" variant="outline" size="icon" aria-label="השתקה">
+        <Button onclick={() => $muted = !$muted} class="bg-transparent hover:bg-border size-auto p-1" variant="outline" size="icon" aria-label="השתקה">
             {#if $muted}
                 <VolumeX size="16" />
             {:else}
                 <Volume2 size="16" />
             {/if}
         </Button>
-    </div>
-    <div>
-        <a href="/" class="text-center text-xl lowercase select-none" aria-label="עמוד הבית של האתר">Oref Client</a>
-        <Badge class="{forceFloating ? '' : 'sm:grid'} hidden place-items-center !border-t-transparent !border-b-transparent">
-            {#key title}<span style="grid-row: 1; grid-column: 1;" in:fly={{ y: -12 }} out:fly={{ y: 12 }}>{title}</span>{/key}
-        </Badge>
-    </div>
-    <div class="flex flex-[1] justify-end gap-1">
-        <Button class="bg-opacity-30" variant="outline" size="icon" href="/map" aria-label="עמוד המפה של האתר"><MapPin /></Button>
-        <Button class="bg-opacity-30" variant="outline" size="icon" href="/settings" aria-label="עמוד ההגדרות של האתר"><Settings2 /></Button>
-        <Button class="bg-opacity-30" on:click={toggleMode} variant="outline" size="icon" aria-label="כפתור לשינוי נראות האתר - בהיר או כהה">
+        <Button onclick={toggleMode} class="bg-transparent hover:bg-border size-auto p-1" variant="outline" size="icon" aria-label="בהיר או כהה">
             <Sun class="hidden dark:block" />
             <Moon class="dark:hidden" />
         </Button>
     </div>
+    <Separator orientation="vertical" class="h-7" />
+    <Tabs.Root value={route}>
+    <Tabs.List>
+        <a href="/"><Tabs.Trigger value="/" class="flex items-center gap-1">
+            <House size="20" />
+            <span class="hidden sm:block">בית</span>
+        </Tabs.Trigger></a>
+        <a href="/map"><Tabs.Trigger value="/map" class="flex items-center gap-1">
+            <MapPin size="20" />
+            <span class="hidden sm:block">מפה</span>
+        </Tabs.Trigger></a>
+        <a href="/settings"><Tabs.Trigger value="/settings" class="flex items-center gap-1">
+            <Settings2 size="20" />
+            <span class="hidden sm:block">הגדרות</span>
+        </Tabs.Trigger></a>
+    </Tabs.List>
+    </Tabs.Root>
 </div>

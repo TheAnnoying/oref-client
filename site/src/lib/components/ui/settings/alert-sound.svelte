@@ -1,15 +1,18 @@
 <script>
     import { onMount } from "svelte";
-    import { localStorage } from "$lib/index.js";
-    import { sounds } from "$lib/utils";
+    import { localStorage } from "$lib/index.ts";
+    import { sounds } from "$lib/utils.ts";
 
-    import { Volume2 } from "lucide-svelte";
+    import { Volume2 } from "@lucide/svelte";
     import { fly } from "svelte/transition";
 
-    import * as RadioGroup from "$lib/components/ui/radio-group";
+    import * as Select from "$lib/components/ui/select/index.js";
     import { Button } from "$lib/components/ui/button";
 
-    let Howl, Howler;
+    let Howl = $state(), Howler = $state(), currentSound = $state(localStorage.get("sound") ?? "beep");
+    $effect(() => {
+        localStorage.set("sound", currentSound);
+    });
 
     onMount(async() => {
         const howler = await import("howler");
@@ -19,18 +22,22 @@
     });
 </script>
 <div in:fly={{ y: -10, opacity: 0, delay: 400 }}>
-    <RadioGroup.Root class="gap-0" value={localStorage.get("sound") ?? "beep"} onValueChange={value => localStorage.set("sound", value)}>
+    <Select.Root value={currentSound} type="single" onValueChange={value => currentSound = value}>
+    <Select.Trigger>{sounds.find(sound => sound.id === currentSound)?.name}</Select.Trigger>
+    <Select.Content>
         {#each sounds as sound}
-            <div class="flex flex-row items-center gap-2">
-                <Button variant="icon" on:click={() => {
-                    Howler.stop();
-                    new Howl({ src: sound.path }).play()
-                }}>
-                    <Volume2 />
-                </Button>
-                <RadioGroup.Item class="!border-t-current !border-b-current" value={sound.id} id={sound.id} />
-                <label for={sound.id}>{sound.name}</label>
+            <div class="flex flex-row gap-1">
+            <Button class="bg-transparent hover:bg-border size-auto p-1" variant="outline" size="icon" onclick={() => {
+                Howler.stop();
+                new Howl({ src: sound.path }).play()
+            }}>
+                <Volume2 />
+            </Button>
+            <Select.Item value={sound.id}>
+                {sound.name}
+            </Select.Item>
             </div>
         {/each}
-    </RadioGroup.Root>
+    </Select.Content>
+    </Select.Root>
 </div>

@@ -1,19 +1,25 @@
 <script lang="ts">
-	import { cn } from "$lib/utils";
+	import type { WithElementRef, WithoutChildren } from "bits-ui";
 	import type { HTMLAttributes } from "svelte/elements";
+	import { cn } from "$lib/utils.js";
 
-	type $$Props = HTMLAttributes<HTMLDivElement>;
-
-	let className: $$Props["class"] = undefined;
-	export { className as class };
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: WithoutChildren<WithElementRef<HTMLAttributes<HTMLDivElement>>> = $props();
 </script>
-<div class={cn("skeleton", className)} {...$$restProps} />
+
+<div
+	bind:this={ref}
+	class={cn("skeleton bg-muted rounded-md bg-[length:200%]", className)}
+	{...restProps}
+></div>
 <style>
 	.skeleton {
 		will-change: background-position;
 		animation: skeleton 1.8s ease-in-out infinite;
-		background-image: linear-gradient(105deg, transparent 0%, transparent 40%, hsl(var(--secondary-foreground)) 50%, transparent 60%, transparent 100%);
-		@apply bg-muted rounded-md bg-[length:200%];
+		background-image: linear-gradient(105deg, transparent 0%, transparent 40%, var(--color-secondary-foreground) 50%, transparent 60%, transparent 100%);
 	}
 
 	@keyframes skeleton {

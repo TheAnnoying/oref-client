@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { fly } from "svelte/transition";
 
     import LocationSettings from "$lib/components/ui/settings/preferred-locations/add-location.svelte";
@@ -8,7 +8,6 @@
     import Separator from "$lib/components/ui/separator/separator.svelte";
 </script>
 <div class="flex flex-col items-center mt-7 mb-10 gap-3 max-w-7xl box-border">
-    <h1 class="scroll-m-20 text-3xl font-semibold tracking-tight" in:fly={{ y: -5, opacity: 0 }}>הגדרות</h1>
     <Separator class="w-full my-5" />
     <div>
         <div class="flex md:flex-row flex-col justify-between">
